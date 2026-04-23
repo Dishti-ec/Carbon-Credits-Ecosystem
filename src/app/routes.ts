@@ -7,19 +7,36 @@ import { EducationHub } from "./components/EducationHub";
 import { Alerts } from "./components/Alerts";
 import { Settings } from "./components/Settings";
 import { NotFound } from "./components/NotFound";
+import { Companies } from "./components/Companies";
+import { Farmlands } from "./components/Farmlands";
+import { LandingPage } from "./components/LandingPage";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    Component: Layout,
+    Component: LandingPage,
+  },
+  {
+    path: "/dashboard",
+    Component: ProtectedRoute,
     children: [
-      { index: true, Component: Dashboard },
-      { path: "carbon-credits", Component: CarbonCredits },
-      { path: "map", Component: MapView },
-      { path: "education", Component: EducationHub },
-      { path: "alerts", Component: Alerts },
-      { path: "settings", Component: Settings },
-      { path: "*", Component: NotFound },
+      {
+        path: "",
+        Component: Layout,
+        children: [
+          { index: true, Component: Dashboard },
+          { path: "carbon-credits", Component: CarbonCredits },
+          { path: "companies", Component: Companies },
+          { path: "farmlands", Component: Farmlands },
+          { path: "map", Component: MapView },
+          { path: "education", Component: EducationHub },
+          { path: "alerts", Component: Alerts },
+          { path: "settings", Component: Settings },
+          { path: "*", Component: NotFound },
+        ],
+      },
     ],
   },
+  { path: "*", Component: NotFound },
 ]);

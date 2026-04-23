@@ -1,8 +1,13 @@
-import { Bell, Search, User } from "lucide-react";
+import { Bell, Search, User, LogOut } from "lucide-react";
 import { useState } from "react";
+import { supabase } from "../../lib/supabase";
 
 export function TopBar() {
   const [searchQuery, setSearchQuery] = useState("");
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+  };
 
   return (
     <header className="h-16 bg-card border-b border-border flex items-center justify-between px-6 sticky top-0 z-40">
@@ -30,9 +35,16 @@ export function TopBar() {
             <User className="w-4 h-4 text-primary-foreground" />
           </div>
           <div>
-            <p className="text-sm" style={{ fontWeight: 500 }}>Admin Portal</p>
-            <p className="text-xs text-muted-foreground">BEE Officer</p>
+            <p className="text-sm" style={{ fontWeight: 500 }}>System User</p>
+            <p className="text-xs text-muted-foreground">Authenticated</p>
           </div>
+          <button
+            onClick={handleLogout}
+            className="p-2 ml-2 rounded-lg hover:bg-red-50 text-red-600 transition-colors"
+            title="Logout"
+          >
+            <LogOut className="w-4 h-4" />
+          </button>
         </div>
       </div>
     </header>

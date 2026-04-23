@@ -1,4 +1,4 @@
-import { NavLink } from "react-router";
+import { NavLink, Link } from "react-router";
 import {
   LayoutDashboard,
   Leaf,
@@ -8,15 +8,19 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
+  Factory,
+  Sprout,
 } from "lucide-react";
 import { useState } from "react";
 
 const navItems = [
-  { to: "/", icon: LayoutDashboard, label: "Dashboard" },
-  { to: "/carbon-credits", icon: Leaf, label: "Carbon Credits" },
-  { to: "/map", icon: Map, label: "Map View" },
-  { to: "/education", icon: GraduationCap, label: "Education Hub" },
-  { to: "/alerts", icon: Bell, label: "Alerts" },
+  { to: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
+  { to: "/dashboard/carbon-credits", icon: Leaf, label: "Carbon Credits" },
+  { to: "/dashboard/companies", icon: Factory, label: "Companies" },
+  { to: "/dashboard/farmlands", icon: Sprout, label: "Farmlands" },
+  { to: "/dashboard/map", icon: Map, label: "Map View" },
+  { to: "/dashboard/education", icon: GraduationCap, label: "Education Hub" },
+  { to: "/dashboard/alerts", icon: Bell, label: "Alerts" },
 ];
 
 export function Sidebar() {
@@ -29,7 +33,7 @@ export function Sidebar() {
       } bg-sidebar text-sidebar-foreground flex flex-col h-screen sticky top-0 transition-all duration-300 z-50`}
     >
       {/* Logo */}
-      <div className="flex items-center gap-3 px-4 py-5 border-b border-sidebar-border">
+      <Link to="/" className="flex items-center gap-3 px-4 py-5 border-b border-sidebar-border hover:bg-sidebar-accent/50 transition-colors">
         <div className="w-10 h-10 rounded-xl bg-sidebar-primary flex items-center justify-center shrink-0">
           <Leaf className="w-5 h-5 text-white" />
         </div>
@@ -41,7 +45,7 @@ export function Sidebar() {
             <p className="text-xs opacity-60">Indian Carbon Market</p>
           </div>
         )}
-      </div>
+      </Link>
 
       {/* Navigation */}
       <nav className="flex-1 py-4 px-2 space-y-1">
@@ -49,7 +53,7 @@ export function Sidebar() {
           <NavLink
             key={item.to}
             to={item.to}
-            end={item.to === "/"}
+            end={item.to === "/dashboard"}
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 ${
                 isActive
