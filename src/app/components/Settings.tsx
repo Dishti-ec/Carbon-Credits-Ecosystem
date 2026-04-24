@@ -1,6 +1,65 @@
-import { User, Bell, Shield, Globe } from "lucide-react";
+import { User, Bell, Shield, Globe, Save, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { supabase } from "../../lib/supabase";
 
 export function Settings() {
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState<{text: string, type: 'success' | 'error'} | null>(null);
+  
+  const [formData, setFormData] = useState({
+    fullName: "",
+    organization: "",
+    email: "",
+    role: "User",
+  });
+
+  useEffect(() => {
+    async function loadUser() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        setFormData({
+          fullName: user.user_metadata?.full_name || "",
+          organization: user.user_metadata?.organization || "",
+          email: user.email || "",
+          role: user.user_metadata?.role || "User",
+        });
+      }
+      setLoading(false);
+    }
+    loadUser();
+  }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSaveProfile = async () => {
+    setSaving(true);
+    setMessage(null);
+    const { error } = await supabase.auth.updateUser({
+      data: {
+        full_name: formData.fullName,
+        organization: formData.organization,
+        role: formData.role,
+      }
+    });
+    
+    if (error) {
+      setMessage({ text: error.message, type: 'error' });
+    } else {
+      setMessage({ text: "Profile updated successfully!", type: 'success' });
+    }
+    setSaving(false);
+  };
+
+  if (loading) {
+    return (
+      <div className="p-6 flex items-center justify-center h-full">
+        <Loader2 className="w-6 h-6 animate-spin text-primary" />
+      </div>
+    );
+  }
   return (
     <div className="p-6 space-y-6 max-w-3xl">
       <div>
@@ -12,42 +71,69 @@ export function Settings() {
 
       {/* Profile */}
       <div className="bg-card rounded-xl border border-border p-6">
-        <div className="flex items-center gap-3 mb-4">
-          <User className="w-5 h-5 text-primary" />
-          <h3 className="text-base" style={{ fontWeight: 600 }}>Profile Settings</h3>
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <User className="w-5 h-5 text-primary" />
+            <h3 className="text-base" style={{ fontWeight: 600 }}>Profile Settings</h3>
+          </div>
+          <button 
+            onClick={handleSaveProfile}
+            disabled={saving}
+            className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm hover:bg-primary/90 transition-colors flex items-center gap-2 disabled:opacity-50"
+          >
+            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+            Save Changes
+          </button>
         </div>
+
+        {message && (
+          <div className={`p-3 rounded-lg text-sm mb-4 ${message.type === 'error' ? 'bg-red-50 text-red-600' : 'bg-[#d8f3dc] text-[#2d6a4f]'}`}>
+            {message.text}
+          </div>
+        )}
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="text-sm text-muted-foreground block mb-1">Full Name</label>
             <input
               type="text"
-              defaultValue="Rajesh Kumar"
-              className="w-full px-3 py-2 bg-input-background rounded-lg border border-border text-sm"
+              name="fullName"
+              value={formData.fullName}
+              onChange={handleChange}
+              placeholder="e.g. Rajesh Kumar"
+              className="w-full px-3 py-2 bg-input-background rounded-lg border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
             />
           </div>
           <div>
             <label className="text-sm text-muted-foreground block mb-1">Organization</label>
             <input
               type="text"
-              defaultValue="Bureau of Energy Efficiency"
-              className="w-full px-3 py-2 bg-input-background rounded-lg border border-border text-sm"
+              name="organization"
+              value={formData.organization}
+              onChange={handleChange}
+              placeholder="e.g. Bureau of Energy Efficiency"
+              className="w-full px-3 py-2 bg-input-background rounded-lg border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
             />
           </div>
           <div>
             <label className="text-sm text-muted-foreground block mb-1">Email</label>
             <input
               type="email"
-              defaultValue="rajesh.kumar@bee.gov.in"
-              className="w-full px-3 py-2 bg-input-background rounded-lg border border-border text-sm"
+              name="email"
+              value={formData.email}
+              readOnly
+              className="w-full px-3 py-2 bg-input-background/50 rounded-lg border border-border text-sm text-muted-foreground cursor-not-allowed"
             />
           </div>
           <div>
             <label className="text-sm text-muted-foreground block mb-1">Role</label>
             <input
               type="text"
-              defaultValue="Market Administrator"
-              className="w-full px-3 py-2 bg-input-background rounded-lg border border-border text-sm"
-              readOnly
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              placeholder="e.g. Market Administrator"
+              className="w-full px-3 py-2 bg-input-background rounded-lg border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
             />
           </div>
         </div>

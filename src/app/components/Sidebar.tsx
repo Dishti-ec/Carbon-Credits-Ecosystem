@@ -10,6 +10,7 @@ import {
   ChevronRight,
   Factory,
   Sprout,
+  X
 } from "lucide-react";
 import { useState } from "react";
 
@@ -23,37 +24,54 @@ const navItems = [
   { to: "/dashboard/alerts", icon: Bell, label: "Alerts" },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+  isMobileMenuOpen?: boolean;
+  setIsMobileMenuOpen?: (open: boolean) => void;
+}
+
+export function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
     <aside
-      className={`${
-        collapsed ? "w-[72px]" : "w-[260px]"
-      } bg-sidebar text-sidebar-foreground flex flex-col h-screen sticky top-0 transition-all duration-300 z-50`}
+      className={`
+        ${collapsed ? "w-[260px] md:w-[72px]" : "w-[260px]"}
+        bg-sidebar text-sidebar-foreground flex flex-col h-screen fixed md:sticky top-0 transition-all duration-300 z-50
+        ${isMobileMenuOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full md:translate-x-0"}
+      `}
     >
       {/* Logo */}
-      <Link to="/" className="flex items-center gap-3 px-4 py-5 border-b border-sidebar-border hover:bg-sidebar-accent/50 transition-colors">
-        <div className="w-10 h-10 rounded-xl bg-sidebar-primary flex items-center justify-center shrink-0">
-          <Leaf className="w-5 h-5 text-white" />
-        </div>
-        {!collapsed && (
-          <div className="overflow-hidden">
-            <p className="text-sm tracking-wide opacity-90" style={{ fontWeight: 600 }}>
-              CarbonBridge
-            </p>
-            <p className="text-xs opacity-60">Indian Carbon Market</p>
+      <div className="flex items-center justify-between border-b border-sidebar-border px-4 py-5 hover:bg-sidebar-accent/50 transition-colors">
+        <Link to="/" className="flex items-center gap-3" onClick={() => setIsMobileMenuOpen?.(false)}>
+          <div className="w-10 h-10 rounded-xl bg-sidebar-primary flex items-center justify-center shrink-0">
+            <Leaf className="w-5 h-5 text-white" />
           </div>
-        )}
-      </Link>
+          {(!collapsed || isMobileMenuOpen) && (
+            <div className="overflow-hidden">
+              <p className="text-sm tracking-wide opacity-90" style={{ fontWeight: 600 }}>
+                CarbonBridge
+              </p>
+              <p className="text-xs opacity-60">Indian Carbon Market</p>
+            </div>
+          )}
+        </Link>
+        {/* Mobile Close Button */}
+        <button 
+          className="md:hidden p-2 -mr-2 rounded-lg text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
+          onClick={() => setIsMobileMenuOpen?.(false)}
+        >
+          <X className="w-5 h-5" />
+        </button>
+      </div>
 
       {/* Navigation */}
-      <nav className="flex-1 py-4 px-2 space-y-1">
+      <nav className="flex-1 py-4 px-2 space-y-1 overflow-y-auto">
         {navItems.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
             end={item.to === "/dashboard"}
+            onClick={() => setIsMobileMenuOpen?.(false)}
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 ${
                 isActive
@@ -63,7 +81,7 @@ export function Sidebar() {
             }
           >
             <item.icon className="w-5 h-5 shrink-0" />
-            {!collapsed && <span className="text-sm">{item.label}</span>}
+            {(!collapsed || isMobileMenuOpen) && <span className="text-sm">{item.label}</span>}
           </NavLink>
         ))}
       </nav>
@@ -71,15 +89,16 @@ export function Sidebar() {
       {/* Bottom */}
       <div className="border-t border-sidebar-border p-2">
         <NavLink
-          to="/settings"
+          to="/dashboard/settings"
+          onClick={() => setIsMobileMenuOpen?.(false)}
           className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-all"
         >
           <Settings className="w-5 h-5 shrink-0" />
-          {!collapsed && <span className="text-sm">Settings</span>}
+          {(!collapsed || isMobileMenuOpen) && <span className="text-sm">Settings</span>}
         </NavLink>
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-all w-full"
+          className="hidden md:flex items-center gap-3 px-3 py-2.5 rounded-lg text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-all w-full"
         >
           {collapsed ? (
             <ChevronRight className="w-5 h-5 shrink-0" />

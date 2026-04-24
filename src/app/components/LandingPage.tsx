@@ -15,9 +15,9 @@ export function LandingPage() {
           </div>
         </div>
         <div className="flex items-center gap-4">
-          <a href="#features" className="text-sm font-medium hover:text-primary transition-colors">Features</a>
-          <a href="#calculator" className="text-sm font-medium hover:text-primary transition-colors">Calculation</a>
-          <Link to="/dashboard" className="text-sm font-medium hover:text-primary transition-colors">Login</Link>
+          <a href="#features" className="hidden md:block text-sm font-medium hover:text-primary transition-colors">Features</a>
+          <a href="#calculator" className="hidden md:block text-sm font-medium hover:text-primary transition-colors">Calculation</a>
+          <Link to="/dashboard" className="hidden md:block text-sm font-medium hover:text-primary transition-colors">Login</Link>
           <Link to="/dashboard" className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors">
             Go to Dashboard
           </Link>
