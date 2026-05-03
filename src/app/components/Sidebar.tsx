@@ -18,16 +18,15 @@ import { useState } from "react";
 import { useUserRole } from "../context/UserProvider";
 
 const allNavItems = [
-  { to: "/dashboard", icon: LayoutDashboard, label: "Dashboard", public: true },
-  { to: "/dashboard/my-properties", icon: MapPin, label: "My Properties", role: "farmer" },
-  { to: "/dashboard/portfolio", icon: Briefcase, label: "Portfolio", role: "company" },
-  { to: "/dashboard/compliance", icon: LayoutDashboard, label: "Compliance Reports", role: "company" },
-  { to: "/dashboard/carbon-credits", icon: Leaf, label: "Carbon Credits", public: true },
-  { to: "/dashboard/companies", icon: Factory, label: "Companies", public: true },
-  { to: "/dashboard/farmlands", icon: Sprout, label: "Farmlands", public: true },
-  { to: "/dashboard/map", icon: Map, label: "Map View", public: true },
-  { to: "/dashboard/education", icon: GraduationCap, label: "Education Hub", public: true },
-  { to: "/dashboard/alerts", icon: Bell, label: "Alerts", public: true },
+  { to: "/app/dashboard", icon: LayoutDashboard, label: "Dashboard", public: true },
+  { to: "/app/portfolio", icon: Briefcase, label: "Portfolio", role: "farmer" },
+  { to: "/app/compliance", icon: LayoutDashboard, label: "Compliance", role: "company" },
+  { to: "/app/carbon-credits", icon: Leaf, label: "Carbon Credits", public: true },
+  { to: "/app/companies", icon: Factory, label: "Companies", public: true },
+  { to: "/app/farmlands", icon: Sprout, label: "Farmlands", public: true },
+  { to: "/app/map", icon: Map, label: "Map View", public: true },
+  { to: "/app/education", icon: GraduationCap, label: "Education Hub", public: true },
+  { to: "/app/alerts", icon: Bell, label: "Alerts", public: true },
 ];
 
 interface SidebarProps {
@@ -79,7 +78,7 @@ export function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: SidebarProps)
           <NavLink
             key={item.to}
             to={item.to}
-            end={item.to === "/dashboard"}
+            end={item.to === "/app/dashboard"}
             onClick={() => setIsMobileMenuOpen?.(false)}
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 ${
@@ -98,7 +97,7 @@ export function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: SidebarProps)
       {/* Bottom */}
       <div className="border-t border-sidebar-border p-2">
         <NavLink
-          to="/dashboard/settings"
+          to="/app/settings"
           onClick={() => setIsMobileMenuOpen?.(false)}
           className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-all"
         >

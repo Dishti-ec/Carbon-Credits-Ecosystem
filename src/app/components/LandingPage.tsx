@@ -17,8 +17,8 @@ export function LandingPage() {
         <div className="flex items-center gap-4">
           <a href="#features" className="hidden md:block text-sm font-medium hover:text-primary transition-colors">Features</a>
           <a href="#calculator" className="hidden md:block text-sm font-medium hover:text-primary transition-colors">Calculation</a>
-          <Link to="/dashboard" className="hidden md:block text-sm font-medium hover:text-primary transition-colors">Login</Link>
-          <Link to="/dashboard" className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors">
+          <Link to="/login" className="hidden md:block text-sm font-medium hover:text-primary transition-colors">Login</Link>
+          <Link to="/app/dashboard" className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors">
             Go to Dashboard
           </Link>
         </div>
@@ -64,7 +64,7 @@ export function LandingPage() {
           <a href="#features" className="px-6 py-3 bg-primary text-primary-foreground rounded-xl font-medium hover:bg-primary/90 transition-all flex items-center justify-center gap-2">
             Explore Ecosystem <ArrowRight className="w-5 h-5"/>
           </a>
-          <Link to="/dashboard" className="px-6 py-3 bg-secondary text-secondary-foreground rounded-xl font-medium hover:bg-secondary/80 transition-all flex items-center justify-center gap-2 border border-border">
+          <Link to="/login" className="px-6 py-3 bg-secondary text-secondary-foreground rounded-xl font-medium hover:bg-secondary/80 transition-all flex items-center justify-center gap-2 border border-border">
             Login / Register
           </Link>
         </div>

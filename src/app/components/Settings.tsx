@@ -1,8 +1,10 @@
 import { User, Bell, Shield, Globe, Save, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { supabase } from "../../lib/supabase";
+import { useUserRole } from "../context/UserProvider";
 
 export function Settings() {
+  const { session, refreshProfile } = useUserRole();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{text: string, type: 'success' | 'error'} | null>(null);
@@ -16,39 +18,60 @@ export function Settings() {
 
   useEffect(() => {
     async function loadUser() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        setFormData({
-          fullName: user.user_metadata?.full_name || "",
-          organization: user.user_metadata?.organization || "",
-          email: user.email || "",
-          role: user.user_metadata?.role || "User",
-        });
+      try {
+        if (session?.user) {
+          // Fetch from profiles table
+          const { data: profile, error } = await supabase
+            .from("profiles")
+            .select("full_name, role, organization")
+            .eq("id", session.user.id)
+            .single();
+
+          if (error && error.code !== 'PGRST116') {
+             console.error("Error fetching profile:", error);
+          }
+
+          setFormData({
+            fullName: profile?.full_name || "",
+            organization: profile?.organization || "",
+            email: session.user.email || "",
+            role: profile?.role || "User",
+          });
+        }
+      } catch (err) {
+        console.error("Error in loadUser:", err);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     }
     loadUser();
-  }, []);
+  }, [session]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSaveProfile = async () => {
+    if (!session?.user) return;
     setSaving(true);
     setMessage(null);
-    const { error } = await supabase.auth.updateUser({
-      data: {
+    
+    // Update the profiles table instead of auth metadata
+    const { error } = await supabase
+      .from("profiles")
+      .update({
         full_name: formData.fullName,
         organization: formData.organization,
         role: formData.role,
-      }
-    });
+      })
+      .eq("id", session.user.id);
     
     if (error) {
       setMessage({ text: error.message, type: 'error' });
     } else {
       setMessage({ text: "Profile updated successfully!", type: 'success' });
+      // Tell UserProvider to update its global state
+      await refreshProfile();
     }
     setSaving(false);
   };
@@ -131,9 +154,9 @@ export function Settings() {
               type="text"
               name="role"
               value={formData.role}
-              onChange={handleChange}
-              placeholder="e.g. Market Administrator"
-              className="w-full px-3 py-2 bg-input-background rounded-lg border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+              readOnly
+              className="w-full px-3 py-2 bg-input-background/50 rounded-lg border border-border text-sm text-muted-foreground cursor-not-allowed"
+              title="Role cannot be changed directly"
             />
           </div>
         </div>

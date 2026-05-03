@@ -1,9 +1,8 @@
 import { useUserRole } from "../context/UserProvider";
-import { Auth } from "./Auth";
-import { Outlet } from "react-router";
+import { Navigate, Outlet } from "react-router";
 
-export function ProtectedRoute() {
-  const { session, loading } = useUserRole();
+export function ProtectedRoute({ children, role }: { children?: React.ReactNode, role?: "farmer" | "company" }) {
+  const { session, role: userRole, loading } = useUserRole();
 
   if (loading) {
     return (
@@ -14,8 +13,12 @@ export function ProtectedRoute() {
   }
 
   if (!session) {
-    return <Auth />;
+    return <Navigate to="/login" replace />;
   }
 
-  return <Outlet />;
+  if (role && role !== userRole) {
+    return <Navigate to="/app/dashboard" replace />;
+  }
+
+  return children ? <>{children}</> : <Outlet />;
 }

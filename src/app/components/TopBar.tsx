@@ -1,9 +1,6 @@
 import { Bell, Search, User as UserIcon, LogOut, Menu, X, Sun, Moon } from "lucide-react";
 import { useState, useEffect } from "react";
-import { supabase } from "../../lib/supabase";
 import { useNavigate, Link } from "react-router";
-import { User } from "@supabase/supabase-js";
-
 import { useUserRole } from "../context/UserProvider";
 
 interface TopBarProps {
@@ -14,7 +11,7 @@ export function TopBar({ setIsMobileMenuOpen }: TopBarProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
-  const { user, role, fullName } = useUserRole();
+  const { user, role, fullName, logout } = useUserRole();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,8 +23,7 @@ export function TopBar({ setIsMobileMenuOpen }: TopBarProps) {
   }, [darkMode]);
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    navigate("/");
+    await logout();
   };
 
   return (
@@ -78,7 +74,7 @@ export function TopBar({ setIsMobileMenuOpen }: TopBarProps) {
         </button>
         <div className="h-6 w-px bg-border hidden sm:block"></div>
         <div className="flex items-center gap-3">
-          <Link to="/dashboard/settings" className="flex items-center gap-2 md:gap-3 hover:opacity-80 transition-opacity cursor-pointer">
+          <Link to="/app/settings" className="flex items-center gap-2 md:gap-3 hover:opacity-80 transition-opacity cursor-pointer">
             <div className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-primary flex items-center justify-center">
               <UserIcon className="w-4 h-4 text-primary-foreground" />
             </div>

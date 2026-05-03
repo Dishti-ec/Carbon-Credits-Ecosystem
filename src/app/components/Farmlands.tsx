@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
 import { Sprout, Plus } from "lucide-react";
+import { useUserRole } from "../context/UserProvider";
 
 interface Farmland {
   id: string;
@@ -9,9 +10,11 @@ interface Farmland {
   crop_type: string;
   estimated_credits: number;
   location: string;
+  user_id?: string;
 }
 
 export function Farmlands() {
+  const { user, role } = useUserRole();
   const [farmlands, setFarmlands] = useState<Farmland[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -26,7 +29,7 @@ export function Farmlands() {
 
   useEffect(() => {
     fetchFarmlands();
-  }, []);
+  }, [user, role]);
 
   const sampleFarmlands: Farmland[] = [
     { id: "sample-1", farmer_name: "Ramesh Kumar", land_size: 15.5, crop_type: "Wheat", estimated_credits: 450, location: "Punjab, India" },
@@ -36,30 +39,46 @@ export function Farmlands() {
 
   const fetchFarmlands = async () => {
     setLoading(true);
-    const { data, error } = await supabase
+    let query = supabase
       .from("farmlands")
       .select("*")
       .order("created_at", { ascending: false });
 
+    // If farmer, only show their own farmlands
+    if (role === "farmer" && user?.id) {
+      query = query.eq("user_id", user.id);
+    }
+
+    const { data, error } = await query;
+
     if (!error && data) {
-      setFarmlands([...sampleFarmlands, ...data]);
+      // For now, prepend sample farmlands just for visual effect unless we want only actual DB data
+      // For a real app, you'd only show `data`.
+      if (role === "farmer") {
+          // A real farmer shouldn't see samples mixed with theirs unless they created them
+          setFarmlands(data);
+      } else {
+          setFarmlands([...sampleFarmlands, ...data]);
+      }
     } else {
-      setFarmlands(sampleFarmlands);
+      if (role !== "farmer") setFarmlands(sampleFarmlands);
+      else setFarmlands([]);
     }
     setLoading(false);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user) {
+        alert("You must be logged in to register a farmland.");
+        return;
+    }
+    
     setSubmitting(true);
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
 
     const { error } = await supabase.from("farmlands").insert([
       {
-        user_id: user?.id,
+        user_id: user.id,
         farmer_name: farmerName,
         land_size: Number(landSize),
         crop_type: cropType,
@@ -92,13 +111,15 @@ export function Farmlands() {
             Registered agricultural lands and potential carbon credits.
           </p>
         </div>
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="flex items-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
-        >
-          <Plus className="w-4 h-4" />
-          Register Farmland
-        </button>
+        {(role === "farmer" || !role) && (
+            <button
+            onClick={() => setShowForm(!showForm)}
+            className="flex items-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+            >
+            <Plus className="w-4 h-4" />
+            Register Farmland
+            </button>
+        )}
       </div>
 
       {showForm && (
