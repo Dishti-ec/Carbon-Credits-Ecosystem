@@ -10,18 +10,24 @@ import {
   ChevronRight,
   Factory,
   Sprout,
-  X
+  X,
+  MapPin,
+  Briefcase
 } from "lucide-react";
 import { useState } from "react";
+import { useUserRole } from "../context/UserProvider";
 
-const navItems = [
-  { to: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-  { to: "/dashboard/carbon-credits", icon: Leaf, label: "Carbon Credits" },
-  { to: "/dashboard/companies", icon: Factory, label: "Companies" },
-  { to: "/dashboard/farmlands", icon: Sprout, label: "Farmlands" },
-  { to: "/dashboard/map", icon: Map, label: "Map View" },
-  { to: "/dashboard/education", icon: GraduationCap, label: "Education Hub" },
-  { to: "/dashboard/alerts", icon: Bell, label: "Alerts" },
+const allNavItems = [
+  { to: "/dashboard", icon: LayoutDashboard, label: "Dashboard", public: true },
+  { to: "/dashboard/my-properties", icon: MapPin, label: "My Properties", role: "farmer" },
+  { to: "/dashboard/portfolio", icon: Briefcase, label: "Portfolio", role: "company" },
+  { to: "/dashboard/compliance", icon: LayoutDashboard, label: "Compliance Reports", role: "company" },
+  { to: "/dashboard/carbon-credits", icon: Leaf, label: "Carbon Credits", public: true },
+  { to: "/dashboard/companies", icon: Factory, label: "Companies", public: true },
+  { to: "/dashboard/farmlands", icon: Sprout, label: "Farmlands", public: true },
+  { to: "/dashboard/map", icon: Map, label: "Map View", public: true },
+  { to: "/dashboard/education", icon: GraduationCap, label: "Education Hub", public: true },
+  { to: "/dashboard/alerts", icon: Bell, label: "Alerts", public: true },
 ];
 
 interface SidebarProps {
@@ -31,6 +37,9 @@ interface SidebarProps {
 
 export function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
+  const { role } = useUserRole();
+
+  const navItems = allNavItems.filter((item) => item.public || item.role === role);
 
   return (
     <aside

@@ -42,40 +42,41 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
+  --background: #0f172a;
+  --foreground: #f1f5f9;
+  --card: #1e293b;
+  --card-foreground: #f1f5f9;
+  --popover: #1e293b;
+  --popover-foreground: #f1f5f9;
+  --primary: #22c55e;
+  --primary-foreground: #020617;
+  --secondary: #1e293b;
+  --secondary-foreground: #f1f5f9;
+  --muted: #334155;
+  --muted-foreground: #94a3b8;
+  --accent: #22c55e;
+  --accent-foreground: #020617;
+  --destructive: #ef4444;
+  --destructive-foreground: #f1f5f9;
+  --border: #334155;
+  --input: #334155;
+  --input-background: #020617;
+  --ring: #00ff9f;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+  --chart-1: #22c55e;
+  --chart-2: #facc15;
+  --chart-3: #ef4444;
+  --chart-4: #00ff9f;
+  --chart-5: #334155;
+  --sidebar: #0f172a;
+  --sidebar-foreground: #f1f5f9;
+  --sidebar-primary: #22c55e;
+  --sidebar-primary-foreground: #020617;
+  --sidebar-accent: #1e293b;
+  --sidebar-accent-foreground: #f1f5f9;
+  --sidebar-border: #334155;
+  --sidebar-ring: #00ff9f;
 }
 
 @theme inline {
@@ -122,6 +123,7 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    transition: all 0.3s ease;
   }
 
   body {
@@ -178,4 +180,82 @@
     font-weight: var(--font-weight-normal);
     line-height: 1.5;
   }
+}
+
+/* Premium Map UI Styles */
+.map-container {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.legend {
+  background: white;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  font-size: 14px;
+  color: #333;
+}
+
+.dark .legend {
+  background: var(--card);
+  color: var(--card-foreground);
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+.legend h4 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.legend i {
+  width: 14px;
+  height: 14px;
+  float: left;
+  margin-right: 8px;
+  opacity: 0.8;
+  border-radius: 50%;
+}
+
+/* Tables Styling */
+.dark table {
+  background: var(--card);
+  color: var(--foreground);
+}
+
+.dark tr {
+  border-bottom: 1px solid var(--border);
+}
+
+.dark tr:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Forms Styling */
+.dark input, .dark select {
+  background: #020617;
+  border: 1px solid var(--border);
+  color: white;
+  border-radius: 8px;
+}
+
+/* Button Styling */
+.button-primary {
+  background: var(--primary);
+  color: #020617;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.button-primary:hover {
+  background: var(--ring); /* highlight neon green */
+}
+
+/* Dashboard Cards Enhancements for Dark Mode */
+.dark .bg-card {
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
 }

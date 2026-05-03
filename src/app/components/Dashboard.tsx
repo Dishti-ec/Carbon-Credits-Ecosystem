@@ -23,8 +23,9 @@ import {
   Bar,
 } from "recharts";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { useUserRole } from "../context/UserProvider";
 
-const statsCards = [
+const baseStatsCards = [
   {
     title: "Total Credits Issued",
     value: "2,45,800",
@@ -100,6 +101,58 @@ const recentActivities = [
 ];
 
 export function Dashboard() {
+  const { role } = useUserRole();
+
+  let displayedCards = baseStatsCards;
+
+  if (role === "farmer") {
+    displayedCards = [
+      {
+        title: "Total Credits Issued",
+        value: "450", // Mock for sum(credits) where farmer_id = auth.uid()
+        change: "+15%",
+        trend: "up",
+        icon: Leaf,
+        color: "#2d6a4f",
+        bgColor: "#d8f3dc",
+      },
+      {
+        title: "Audit Progress",
+        value: "75%",
+        change: "Verified",
+        trend: "up",
+        icon: BarChart3,
+        color: "#52b788",
+        bgColor: "#e8f5e9",
+      },
+      baseStatsCards[2], // Compliant Companies
+      baseStatsCards[3], // Avg Credit Price
+    ];
+  } else if (role === "company") {
+    displayedCards = [
+      {
+        title: "Carbon Offset",
+        value: "12,450 tCO2e",
+        change: "+5.2%",
+        trend: "up",
+        icon: Leaf,
+        color: "#2d6a4f",
+        bgColor: "#d8f3dc",
+      },
+      baseStatsCards[1], // Active Farmers
+      baseStatsCards[2], // Compliant Companies
+      {
+        title: "Market Savings",
+        value: "INR 45,200",
+        change: "+12.1%",
+        trend: "up",
+        icon: TrendingUp,
+        color: "#1b4332",
+        bgColor: "#b7e4c7",
+      },
+    ];
+  }
+
   return (
     <div className="p-6 space-y-6">
       {/* Hero Banner */}
@@ -136,7 +189,7 @@ export function Dashboard() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {statsCards.map((card) => (
+        {displayedCards.map((card) => (
           <div
             key={card.title}
             className="bg-card rounded-xl border border-border p-5 hover:shadow-md transition-shadow"

@@ -17,6 +17,12 @@ export function Companies() {
     fetchCompanies();
   }, []);
 
+  const sampleCompanies: Company[] = [
+    { id: "sample-1", name: "GreenTech Industries", sector: "Manufacturing", compliance_status: "compliant" },
+    { id: "sample-2", name: "EcoLogistics", sector: "Transportation", compliance_status: "pending" },
+    { id: "sample-3", name: "AgriCorp", sector: "Agriculture", compliance_status: "compliant" },
+  ];
+
   const fetchCompanies = async () => {
     setLoading(true);
     const { data, error } = await supabase
@@ -25,7 +31,9 @@ export function Companies() {
       .order("created_at", { ascending: false });
 
     if (!error && data) {
-      setCompanies(data);
+      setCompanies([...sampleCompanies, ...data]);
+    } else {
+      setCompanies(sampleCompanies);
     }
     setLoading(false);
   };

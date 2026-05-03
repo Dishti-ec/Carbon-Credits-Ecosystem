@@ -29,6 +29,7 @@ interface Alert {
   sector: string;
   isRead: boolean;
   action?: string;
+  targetRole: "company" | "farmer" | "all";
 }
 
 const alerts: Alert[] = [
@@ -44,6 +45,7 @@ const alerts: Alert[] = [
     sector: "Iron & Steel",
     isRead: false,
     action: "Prepare MRV Documentation",
+    targetRole: "company",
   },
   {
     id: 2,
@@ -57,6 +59,7 @@ const alerts: Alert[] = [
     sector: "Cement",
     isRead: false,
     action: "Schedule Audit Team",
+    targetRole: "company",
   },
   {
     id: 3,
@@ -70,6 +73,7 @@ const alerts: Alert[] = [
     sector: "Aluminium",
     isRead: false,
     action: "Submit MRV Plan",
+    targetRole: "company",
   },
   {
     id: 4,
@@ -81,19 +85,21 @@ const alerts: Alert[] = [
     entity: "All Market Participants",
     sector: "All Sectors",
     isRead: true,
+    targetRole: "all",
   },
   {
     id: 5,
-    title: "Annual GHG Report Due - FY2025",
-    description: "Verified GHG emissions report must be submitted within 4 months of compliance year ending as per CCTS regulations.",
+    title: "Soil Carbon Verification Needed",
+    description: "Your recently registered plot needs physical verification by the local FPO representative before credits can be issued.",
     priority: "high",
-    category: "deadline",
+    category: "inspection",
     date: "2026-03-01",
-    dueDate: "2026-07-31",
-    entity: "Reliance Petroleum",
-    sector: "Petroleum Refining",
-    isRead: true,
-    action: "Prepare GHG Report",
+    dueDate: "2026-03-10",
+    entity: "Local Farm",
+    sector: "Agriculture",
+    isRead: false,
+    action: "Schedule Visit",
+    targetRole: "farmer",
   },
   {
     id: 6,
@@ -105,29 +111,19 @@ const alerts: Alert[] = [
     entity: "Raymond Textiles",
     sector: "Textiles",
     isRead: true,
+    targetRole: "company",
   },
   {
     id: 7,
-    title: "Grid-India Registry Maintenance",
-    description: "Scheduled maintenance on ICM Registry system. Credit transfers and issuance will be paused for 4 hours.",
+    title: "Credit Issuance Approved",
+    description: "Your agroforestry project has been successfully verified. 450 Carbon Credits have been issued to your account.",
     priority: "low",
     category: "notification",
     date: "2026-02-25",
-    dueDate: "2026-03-08",
-    entity: "All Entities",
-    sector: "All Sectors",
+    entity: "Your Profile",
+    sector: "Agriculture",
     isRead: true,
-  },
-  {
-    id: 8,
-    title: "NSCICM Quarterly Review Meeting",
-    description: "National Steering Committee for ICM quarterly review of market performance and sector recommendations. Summary report expected.",
-    priority: "low",
-    category: "notification",
-    date: "2026-02-20",
-    entity: "Governance Bodies",
-    sector: "All Sectors",
-    isRead: true,
+    targetRole: "farmer",
   },
 ];
 
@@ -145,11 +141,16 @@ const categoryConfig: Record<AlertCategory, { label: string; icon: typeof Bell; 
   notification: { label: "System Notification", icon: Info, color: "#5a6b5a" },
 };
 
+import { useUserRole } from "../context/UserProvider";
+
 export function Alerts() {
+  const { role } = useUserRole();
   const [filterPriority, setFilterPriority] = useState<"all" | AlertPriority>("all");
   const [filterCategory, setFilterCategory] = useState<"all" | AlertCategory>("all");
   const [expandedAlert, setExpandedAlert] = useState<number | null>(null);
-  const [alertList, setAlertList] = useState(alerts);
+  
+  const roleAlerts = alerts.filter(a => a.targetRole === "all" || a.targetRole === role);
+  const [alertList, setAlertList] = useState(roleAlerts);
 
   const unreadCount = alertList.filter((a) => !a.isRead).length;
 

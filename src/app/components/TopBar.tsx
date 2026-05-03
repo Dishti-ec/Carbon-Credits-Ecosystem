@@ -1,8 +1,10 @@
-import { Bell, Search, User as UserIcon, LogOut, Menu, X } from "lucide-react";
+import { Bell, Search, User as UserIcon, LogOut, Menu, X, Sun, Moon } from "lucide-react";
 import { useState, useEffect } from "react";
 import { supabase } from "../../lib/supabase";
 import { useNavigate, Link } from "react-router";
 import { User } from "@supabase/supabase-js";
+
+import { useUserRole } from "../context/UserProvider";
 
 interface TopBarProps {
   setIsMobileMenuOpen?: (open: boolean) => void;
@@ -11,20 +13,17 @@ interface TopBarProps {
 export function TopBar({ setIsMobileMenuOpen }: TopBarProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  const [darkMode, setDarkMode] = useState(true);
+  const { user, role, fullName } = useUserRole();
   const navigate = useNavigate();
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setUser(user);
-    });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [darkMode]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -65,6 +64,14 @@ export function TopBar({ setIsMobileMenuOpen }: TopBarProps) {
           <Search className="w-5 h-5 text-muted-foreground" />
         </button>
 
+        <button 
+          onClick={() => setDarkMode(!darkMode)}
+          className="relative p-2 rounded-lg hover:bg-muted transition-colors"
+          title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+        >
+          {darkMode ? <Sun className="w-5 h-5 text-muted-foreground" /> : <Moon className="w-5 h-5 text-muted-foreground" />}
+        </button>
+
         <button className="relative p-2 rounded-lg hover:bg-muted transition-colors hidden sm:block">
           <Bell className="w-5 h-5 text-muted-foreground" />
           <span className="absolute top-1 right-1 w-2 h-2 bg-destructive rounded-full"></span>
@@ -77,10 +84,12 @@ export function TopBar({ setIsMobileMenuOpen }: TopBarProps) {
             </div>
             <div className="hidden sm:block">
               <p className="text-sm" style={{ fontWeight: 500 }}>
-                {user?.user_metadata?.full_name || user?.email?.split('@')[0] || "System User"}
+                {role === 'farmer' ? `Farmer: ${fullName || user?.email?.split('@')[0]}` : 
+                 role === 'company' ? `Enterprise: ${fullName || user?.email?.split('@')[0]}` :
+                 fullName || user?.email?.split('@')[0] || "Guest User"}
               </p>
-              <p className="text-xs text-muted-foreground">
-                {user?.user_metadata?.role || "Authenticated"}
+              <p className="text-xs text-muted-foreground capitalize">
+                {role || "Public View"}
               </p>
             </div>
           </Link>

@@ -1,14 +1,44 @@
 
   <!DOCTYPE html>
-  <html lang="en">
+  <html lang="en" dir="ltr">
     <head>
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>Farmer-Corporate Ecosystem Dashboard</title>
+      <meta name="description" content="Farmer-Corporate Ecosystem Dashboard — insights on farms, companies, carbon credits, and education resources." />
+      <meta name="robots" content="index, follow" />
+      <link rel="canonical" href="https://example.com/" />
+
+      <!-- Open Graph -->
+      <meta property="og:title" content="Farmer-Corporate Ecosystem Dashboard" />
+      <meta property="og:description" content="Insights on farms, companies, carbon credits and more." />
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content="https://example.com/" />
+      <meta property="og:image" content="https://example.com/og-image.png" />
+
+      <!-- Twitter -->
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content="Farmer-Corporate Ecosystem Dashboard" />
+      <meta name="twitter:description" content="Insights on farms, companies, carbon credits and more." />
+      <meta name="twitter:image" content="https://example.com/og-image.png" />
+
+      <link rel="icon" href="/favicon.ico" />
+      <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+      <link rel="manifest" href="/site.webmanifest" />
+      <meta name="theme-color" content="#ffffff" />
+
+      <!-- Performance hints -->
+      <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+      <link rel="modulepreload" href="/src/main.tsx" />
     </head>
 
     <body>
-      <div id="root"></div>
+      <a class="skip-link" href="#root" style="position:absolute;left:-999px;top:auto;width:1px;height:1px;overflow:hidden;">Skip to content</a>
+      <div id="root" role="main"></div>
+      <noscript>
+        <div style="padding:1rem;background:#ffdddd;color:#000">This app requires JavaScript. Please enable JavaScript in your browser to view the dashboard.</div>
+      </noscript>
       <script type="module" src="/src/main.tsx"></script>
     </body>
   </html>

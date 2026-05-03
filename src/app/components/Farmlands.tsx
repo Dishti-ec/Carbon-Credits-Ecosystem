@@ -28,6 +28,12 @@ export function Farmlands() {
     fetchFarmlands();
   }, []);
 
+  const sampleFarmlands: Farmland[] = [
+    { id: "sample-1", farmer_name: "Ramesh Kumar", land_size: 15.5, crop_type: "Wheat", estimated_credits: 450, location: "Punjab, India" },
+    { id: "sample-2", farmer_name: "Suresh Patel", land_size: 8.2, crop_type: "Rice", estimated_credits: 220, location: "Gujarat, India" },
+    { id: "sample-3", farmer_name: "Anita Devi", land_size: 12.0, crop_type: "Sugarcane", estimated_credits: 850, location: "Maharashtra, India" },
+  ];
+
   const fetchFarmlands = async () => {
     setLoading(true);
     const { data, error } = await supabase
@@ -36,7 +42,9 @@ export function Farmlands() {
       .order("created_at", { ascending: false });
 
     if (!error && data) {
-      setFarmlands(data);
+      setFarmlands([...sampleFarmlands, ...data]);
+    } else {
+      setFarmlands(sampleFarmlands);
     }
     setLoading(false);
   };

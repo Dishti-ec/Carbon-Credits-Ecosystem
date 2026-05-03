@@ -8,8 +8,11 @@ import {
   ChevronDown,
   Eye,
 } from "lucide-react";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap, LayersControl, Circle, LayerGroup } from "react-leaflet";
+import L from "leaflet";
 import { supabase } from "../../lib/supabase";
+import { useUserRole } from "../context/UserProvider";
+import { useNavigate } from "react-router";
 
 interface DBLocation {
   id: string;
@@ -36,6 +39,53 @@ const statusColor = {
   verified: "#0369a1",
 };
 
+const companyIcon = new L.Icon({
+  iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
+  iconSize: [30, 30]
+});
+
+const farmIcon = new L.Icon({
+  iconUrl: 'https://cdn-icons-png.flaticon.com/512/2909/2909760.png',
+  iconSize: [30, 30]
+});
+
+const getColor = (credits: number, type: string) => {
+  if (type === 'industry') return 'blue';
+  if (credits > 800) return 'green';
+  if (credits > 400) return 'yellow';
+  return 'red';
+};
+
+const Legend = ({ map }: { map: L.Map }) => {
+  useEffect(() => {
+    const legend = new L.Control({ position: 'bottomright' });
+
+    legend.onAdd = function () {
+      const div = L.DomUtil.create('div', 'info legend');
+      div.innerHTML = `
+        <h4>Carbon Activity</h4>
+        <i style="background: green"></i> High Credits<br/>
+        <i style="background: yellow"></i> Medium Credits<br/>
+        <i style="background: red"></i> Low Credits<br/>
+        <i style="background: blue"></i> Company HQ
+      `;
+      return div;
+    };
+
+    legend.addTo(map);
+    return () => {
+      legend.remove();
+    };
+  }, [map]);
+
+  return null;
+};
+
+function MapLegend() {
+  const map = useMap();
+  return <Legend map={map} />;
+}
+
 // Component to recenter map when location is selected
 function RecenterAutomatically({ lat, lng }: { lat: number; lng: number }) {
   const map = useMap();
@@ -46,18 +96,32 @@ function RecenterAutomatically({ lat, lng }: { lat: number; lng: number }) {
 }
 
 export function MapView() {
+  const { role, user } = useUserRole();
+  const navigate = useNavigate();
   const [companies, setCompanies] = useState<any[]>([]);
   const [farmlands, setFarmlands] = useState<any[]>([]);
   const [selectedLocation, setSelectedLocation] = useState<DBLocation | null>(null);
   const [filterType, setFilterType] = useState<"all" | "farm" | "industry" | "fpo">("all");
+  const [sectorFilter, setSectorFilter] = useState<string>("all");
   const [showLayers, setShowLayers] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       const { data: companiesData } = await supabase.from("companies").select("*");
       const { data: farmlandsData } = await supabase.from("farmlands").select("*");
-      setCompanies(companiesData || []);
-      setFarmlands(farmlandsData || []);
+      
+      const sampleCompanies = [
+        { id: "sample-map-1", name: "GreenTech Industries", latitude: 28.7041, longitude: 77.1025, sector: "Manufacturing", carbon_credits: 900 },
+        { id: "sample-map-2", name: "EcoLogistics", latitude: 19.0760, longitude: 72.8777, sector: "Transportation", carbon_credits: 500 },
+      ];
+      const sampleFarmlands = [
+        { id: "sample-map-3", farmer_name: "Ramesh Kumar", latitude: 31.1471, longitude: 75.3412, crop_type: "Wheat", estimated_credits: 450 },
+        { id: "sample-map-4", farmer_name: "Suresh Patel", latitude: 22.2587, longitude: 71.1924, crop_type: "Rice", estimated_credits: 220 },
+        { id: "sample-map-5", farmer_name: "Anita Devi", latitude: 19.7515, longitude: 75.7139, crop_type: "Sugarcane", estimated_credits: 850 },
+      ];
+
+      setCompanies([...sampleCompanies, ...(companiesData || [])]);
+      setFarmlands([...sampleFarmlands, ...(farmlandsData || [])]);
     };
     fetchData();
   }, []);
@@ -89,9 +153,28 @@ export function MapView() {
     })),
   ];
 
-  const filteredLocations = dynamicLocations.filter(
-    (l) => filterType === "all" || l.type === filterType
-  );
+  const filteredLocations = dynamicLocations.filter((l) => {
+    const typeMatch = filterType === "all" || l.type === filterType;
+    const sectorMatch = sectorFilter === "all" || (l.originalData && l.originalData.sector === sectorFilter);
+    return typeMatch && sectorMatch;
+  });
+
+  // Auto-zoom for farmer (mock logic)
+  useEffect(() => {
+    if (role === "farmer" && filteredLocations.length > 0) {
+      const myFarm = filteredLocations.find(l => l.type === "farm");
+      if (myFarm && !selectedLocation) {
+        setSelectedLocation(myFarm);
+      }
+    }
+  }, [role, filteredLocations.length]);
+
+  const handleActionClick = () => {
+    if (!user) {
+      alert("Join CarbonBridge to start your sustainability journey.");
+      navigate("/"); // Redirect to auth/login
+    }
+  };
 
   return (
     <div className="p-6 space-y-6">
@@ -113,44 +196,97 @@ export function MapView() {
             <Layers className="w-4 h-4" />
             Layers
           </button>
-          <div className="relative">
-            <select
-              value={filterType}
-              onChange={(e) => setFilterType(e.target.value as typeof filterType)}
-              className="appearance-none bg-card border border-border rounded-lg px-3 py-2 pr-8 text-sm cursor-pointer"
-            >
-              <option value="all">All Types</option>
-              <option value="farm">Farm Zones</option>
-              <option value="industry">Industrial</option>
-            </select>
-            <ChevronDown className="w-4 h-4 absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+          <div className="relative flex gap-2">
+            {role === "company" && (
+              <select
+                value={sectorFilter}
+                onChange={(e) => setSectorFilter(e.target.value)}
+                className="appearance-none bg-card border border-border rounded-lg px-3 py-2 pr-8 text-sm cursor-pointer"
+              >
+                <option value="all">All Sectors</option>
+                <option value="Manufacturing">Manufacturing</option>
+                <option value="Transportation">Transportation</option>
+              </select>
+            )}
+            <div className="relative">
+              <select
+                value={filterType}
+                onChange={(e) => setFilterType(e.target.value as typeof filterType)}
+                className="appearance-none bg-card border border-border rounded-lg px-3 py-2 pr-8 text-sm cursor-pointer"
+              >
+                <option value="all">All Types</option>
+                <option value="farm">Farm Zones</option>
+                <option value="industry">Industrial</option>
+              </select>
+              <ChevronDown className="w-4 h-4 absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+            </div>
           </div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Map Area */}
-        <div className="lg:col-span-3 bg-card rounded-xl border border-border overflow-hidden relative" style={{ minHeight: "540px" }}>
+        <div className="lg:col-span-3 bg-card map-container relative" style={{ minHeight: "540px" }}>
           <MapContainer center={[22.9734, 78.6569]} zoom={5} style={{ height: "100%", minHeight: "540px", width: "100%", zIndex: 10 }}>
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            />
-            {filteredLocations.map((loc) => (
-              <Marker
-                key={loc.id}
-                position={[loc.lat, loc.lng]}
-                eventHandlers={{
-                  click: () => setSelectedLocation(loc),
-                }}
-              >
-                <Popup>
-                  <strong>{loc.name}</strong><br />
-                  {loc.details}<br />
-                  Credits: {loc.credits.toLocaleString()} tCO2e
-                </Popup>
-              </Marker>
-            ))}
+            <LayersControl position="topright">
+              <LayersControl.BaseLayer checked name="OpenStreetMap">
+                <TileLayer
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                />
+              </LayersControl.BaseLayer>
+
+              <LayersControl.Overlay checked name="Activity Zones">
+                <LayerGroup>
+                  {filteredLocations.map((loc) => (
+                    <Circle
+                      key={`circle-${loc.id}`}
+                      center={[loc.lat, loc.lng]}
+                      radius={loc.credits * 100} // Dynamic radius based on credits
+                      pathOptions={{ 
+                        color: getColor(loc.credits, loc.type), 
+                        fillColor: getColor(loc.credits, loc.type),
+                        fillOpacity: 0.4
+                      }}
+                    />
+                  ))}
+                </LayerGroup>
+              </LayersControl.Overlay>
+
+              <LayersControl.Overlay checked name="Location Markers">
+                <LayerGroup>
+                  {filteredLocations.map((loc) => (
+                    <Marker
+                      key={loc.id}
+                      position={[loc.lat, loc.lng]}
+                      icon={loc.type === 'industry' ? companyIcon : farmIcon}
+                      eventHandlers={{
+                        click: () => setSelectedLocation(loc),
+                      }}
+                    >
+                      <Popup>
+                        <div className="text-sm">
+                          <strong className="text-base">{loc.name}</strong><br />
+                          <span className="text-muted-foreground">Location:</span> {loc.state}<br />
+                          <span className="text-muted-foreground">Credits:</span> {loc.credits.toLocaleString()} tCO2e<br />
+                          <span className="text-muted-foreground">Status:</span> {loc.credits > 800 ? "High Impact" : "Growing"}
+                          
+                          {(role === "company" || !user) && (
+                            <button
+                              onClick={handleActionClick}
+                              className="mt-2 w-full py-1.5 bg-primary text-primary-foreground rounded-md text-xs font-medium hover:bg-primary/90 transition-colors"
+                            >
+                              {user ? "Buy/Reserve Credits" : "Login to Buy Credits"}
+                            </button>
+                          )}
+                        </div>
+                      </Popup>
+                    </Marker>
+                  ))}
+                </LayerGroup>
+              </LayersControl.Overlay>
+            </LayersControl>
+            <MapLegend />
             {selectedLocation && (
               <RecenterAutomatically lat={selectedLocation.lat} lng={selectedLocation.lng} />
             )}

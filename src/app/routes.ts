@@ -26,6 +26,9 @@ export const router = createBrowserRouter([
         Component: Layout,
         children: [
           { index: true, Component: Dashboard },
+          { path: "my-properties", Component: Farmlands }, // Reusing Farmlands for now
+          { path: "portfolio", Component: Companies }, // Reusing Companies for now
+          { path: "compliance", Component: Companies }, // Reusing Companies for now
           { path: "carbon-credits", Component: CarbonCredits },
           { path: "companies", Component: Companies },
           { path: "farmlands", Component: Farmlands },

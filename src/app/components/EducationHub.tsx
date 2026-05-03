@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Sprout,
   Factory,
@@ -16,6 +16,7 @@ import {
   ClipboardCheck,
 } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { useUserRole } from "../context/UserProvider";
 
 type Tab = "farmers" | "corporates";
 
@@ -155,7 +156,12 @@ const quickFacts = [
 ];
 
 export function EducationHub() {
-  const [activeTab, setActiveTab] = useState<Tab>("farmers");
+  const { role } = useUserRole();
+  const [activeTab, setActiveTab] = useState<Tab>(role === "company" ? "corporates" : "farmers");
+
+  useEffect(() => {
+    setActiveTab(role === "company" ? "corporates" : "farmers");
+  }, [role]);
 
   const courses = activeTab === "farmers" ? farmerCourses : corporateCourses;
 
@@ -171,57 +177,88 @@ export function EducationHub() {
         </div>
       </div>
 
-      {/* Featured Banner */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="relative rounded-xl overflow-hidden h-[200px]">
-          <ImageWithFallback
-            src="https://images.unsplash.com/photo-1685023620523-9c726f2c499b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxvcmdhbmljJTIwc3VzdGFpbmFibGUlMjBmYXJtaW5nJTIwcHJhY3RpY2VzfGVufDF8fHx8MTc3Mjc5NjY4NXww&ixlib=rb-4.1.0&q=80&w=1080"
-            alt="Sustainable farming"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#2d6a4f]/90 to-transparent"></div>
-          <div className="absolute inset-0 flex items-center p-6">
-            <div>
-              <span className="px-2 py-1 bg-white/20 backdrop-blur-sm rounded text-xs text-white mb-2 inline-block">
-                For Farmers
-              </span>
-              <h3 className="text-white text-lg mb-1" style={{ fontWeight: 600 }}>
-                Regenerative Agriculture Guide
-              </h3>
-              <p className="text-white/80 text-sm max-w-xs">
-                Comprehensive practices for carbon sequestration and sustainable income
-              </p>
-              <button className="mt-3 flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-lg text-white text-sm hover:bg-white/30 transition-colors">
-                <Play className="w-4 h-4" /> Start Learning
-              </button>
+      {/* Featured Banner based on Role */}
+      <div className="grid grid-cols-1 gap-4">
+        {role === "farmer" && (
+          <div className="relative rounded-xl overflow-hidden h-[200px]">
+            <ImageWithFallback
+              src="https://images.unsplash.com/photo-1685023620523-9c726f2c499b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxvcmdhbmljJTIwc3VzdGFpbmFibGUlMjBmYXJtaW5nJTIwcHJhY3RpY2VzfGVufDF8fHx8MTc3Mjc5NjY4NXww&ixlib=rb-4.1.0&q=80&w=1080"
+              alt="Sustainable farming"
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#2d6a4f]/90 to-transparent"></div>
+            <div className="absolute inset-0 flex items-center p-6">
+              <div>
+                <span className="px-2 py-1 bg-white/20 backdrop-blur-sm rounded text-xs text-white mb-2 inline-block">
+                  Priority for Farmers
+                </span>
+                <h3 className="text-white text-lg mb-1" style={{ fontWeight: 600 }}>
+                  How to increase soil carbon
+                </h3>
+                <p className="text-white/80 text-sm max-w-xs">
+                  Comprehensive practices for carbon sequestration and sustainable income
+                </p>
+                <button className="mt-3 flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-lg text-white text-sm hover:bg-white/30 transition-colors">
+                  <Play className="w-4 h-4" /> Start Learning
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
-        <div className="relative rounded-xl overflow-hidden h-[200px]">
-          <ImageWithFallback
-            src="https://images.unsplash.com/photo-1686100511314-7d4a52987f2f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3Jwb3JhdGUlMjBvZmZpY2UlMjBidXNpbmVzcyUyMG1lZXRpbmclMjBzdXN0YWluYWJpbGl0eXxlbnwxfHx8fDE3NzI3OTY2ODV8MA&ixlib=rb-4.1.0&q=80&w=1080"
-            alt="Corporate sustainability"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1b4332]/90 to-transparent"></div>
-          <div className="absolute inset-0 flex items-center p-6">
-            <div>
-              <span className="px-2 py-1 bg-white/20 backdrop-blur-sm rounded text-xs text-white mb-2 inline-block">
-                For Corporates
-              </span>
-              <h3 className="text-white text-lg mb-1" style={{ fontWeight: 600 }}>
-                CCTS Compliance Masterclass
-              </h3>
-              <p className="text-white/80 text-sm max-w-xs">
-                Navigate Phase 1 compliance requirements and carbon credit trading
-              </p>
-              <button className="mt-3 flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-lg text-white text-sm hover:bg-white/30 transition-colors">
-                <Play className="w-4 h-4" /> Start Learning
-              </button>
+        {role === "company" && (
+          <div className="relative rounded-xl overflow-hidden h-[200px]">
+            <ImageWithFallback
+              src="https://images.unsplash.com/photo-1686100511314-7d4a52987f2f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3Jwb3JhdGUlMjBvZmZpY2UlMjBidXNpbmVzcyUyMG1lZXRpbmclMjBzdXN0YWluYWJpbGl0eXxlbnwxfHx8fDE3NzI3OTY2ODV8MA&ixlib=rb-4.1.0&q=80&w=1080"
+              alt="Corporate sustainability"
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#1b4332]/90 to-transparent"></div>
+            <div className="absolute inset-0 flex items-center p-6">
+              <div>
+                <span className="px-2 py-1 bg-white/20 backdrop-blur-sm rounded text-xs text-white mb-2 inline-block">
+                  Priority for Companies
+                </span>
+                <h3 className="text-white text-lg mb-1" style={{ fontWeight: 600 }}>
+                  New Government Regulations for ESG
+                </h3>
+                <p className="text-white/80 text-sm max-w-xs">
+                  Navigate Phase 1 compliance requirements and carbon credit trading
+                </p>
+                <button className="mt-3 flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-lg text-white text-sm hover:bg-white/30 transition-colors">
+                  <Play className="w-4 h-4" /> Start Learning
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        )}
+
+        {role !== "farmer" && role !== "company" && (
+          <div className="relative rounded-xl overflow-hidden h-[200px]">
+            <ImageWithFallback
+              src="https://images.unsplash.com/photo-1657348477443-df0e64783d8b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjBmYXJtZXIlMjBncmVlbiUyMGZpZWxkJTIwYWdyaWN1bHR1cmV8ZW58MXx8fHwxNzcyNzk2NjgzfDA&ixlib=rb-4.1.0&q=80&w=1080"
+              alt="Public Overview"
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#1b4332]/90 to-transparent"></div>
+            <div className="absolute inset-0 flex items-center p-6">
+              <div>
+                <span className="px-2 py-1 bg-white/20 backdrop-blur-sm rounded text-xs text-white mb-2 inline-block">
+                  General Overview
+                </span>
+                <h3 className="text-white text-lg mb-1" style={{ fontWeight: 600 }}>
+                  Why Carbon Credits?
+                </h3>
+                <p className="text-white/80 text-sm max-w-xs">
+                  Discover the impact of the Indian Carbon Market on sustainability and the economy
+                </p>
+                <button className="mt-3 flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-lg text-white text-sm hover:bg-white/30 transition-colors">
+                  <Play className="w-4 h-4" /> Start Learning
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Quick Facts */}
