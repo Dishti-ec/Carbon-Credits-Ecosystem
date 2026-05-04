@@ -13,6 +13,7 @@ import { LandingPage } from "./components/LandingPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Auth } from "./components/Auth";
 import { Compliance } from "./components/Compliance";
+import { FarmerPortfolio } from "./components/FarmerPortfolio";
 
 export const router = createBrowserRouter([
   {
@@ -34,7 +35,11 @@ export const router = createBrowserRouter([
           { path: "dashboard", Component: Dashboard },
           { 
             path: "portfolio", 
-            element: <ProtectedRoute role="farmer"><Companies /></ProtectedRoute> // Reusing Companies for now as placeholder
+            element: (
+              <ProtectedRoute role="farmer">
+                <FarmerPortfolio />
+              </ProtectedRoute>
+            ),
           },
           { 
             path: "compliance", 
