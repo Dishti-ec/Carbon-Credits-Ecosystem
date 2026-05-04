@@ -295,25 +295,25 @@ export function LandingPage() {
       {/* Compliance Cycle & Roles */}
       <section id="features" className="relative py-20 px-6 w-full overflow-hidden">
           {/* Background image */}
-          <div className="absolute inset-0 -z-10">
+          <div className="absolute inset-0 z-0">
             <img
               src={cmcBg}
               alt=""
               aria-hidden="true"
-              className="h-full w-full object-cover opacity-35"
+              className="h-full w-full object-cover opacity-100"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/70 to-background/90" />
+            <div className="absolute inset-0 z-10 bg-transparent pointer-events-none" />
           </div>
 
-          <div className="max-w-7xl mx-auto w-full">
+          <div className="max-w-7xl mx-auto w-full relative z-20">
           <div className="text-center mb-16">
               <h2 className="text-3xl font-bold mb-4">The Compliance Mechanism Cycle</h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">Obligated entities must adhere to a comprehensive cycle of target setting, monitoring, and verification.</p>
           </div>
 
           <div className="relative">
-            {/* subtle background wash like reference */}
-            <div className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/5 via-transparent to-transparent rounded-[40px]" />
+            {/* subtle background wash removed to reveal background image */}
+            <div className="absolute inset-0 -z-10 bg-transparent rounded-[40px]" />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-6 place-items-center">
               {/* Step 01 */}
