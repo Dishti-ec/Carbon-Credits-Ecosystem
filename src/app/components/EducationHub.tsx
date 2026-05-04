@@ -130,9 +130,12 @@ export function EducationHub() {
 
       {view === "chapter" && selectedCourse && selectedChapterId && (
         <ChapterView 
+          course={selectedCourse}
           chapter={selectedCourse.chapters.find(c => c.id === selectedChapterId)!} 
           chapterIndex={selectedCourse.chapters.findIndex(c => c.id === selectedChapterId)}
           totalChapters={selectedCourse.chapters.length}
+          completedChapters={completedChapters[selectedCourse.id] || []}
+          onSelectChapter={handleSelectChapter}
           onBack={() => setView("roadmap")}
           onComplete={handleCompleteChapter}
           isCompleted={(completedChapters[selectedCourse.id] || []).includes(selectedChapterId)}
