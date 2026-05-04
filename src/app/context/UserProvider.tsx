@@ -129,28 +129,33 @@ export function UserRoleProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const logout = async () => {
-    const { error } = await supabase.auth.signOut();
-
-    if (error) {
-      console.error("Logout error:", error.message);
-      // Supabase failed to clear the session remotely, so we MUST forcefully clear it locally
-      // Otherwise the user is permanently stuck in the app!
-      try {
-        const keysToRemove = [];
-        for (let i = 0; i < localStorage.length; i++) {
-          const key = localStorage.key(i);
-          if (key && key.startsWith('sb-')) {
-            keysToRemove.push(key);
-          }
-        }
-        keysToRemove.forEach(k => localStorage.removeItem(k));
-      } catch (e) {
-        // ignore
-      }
+    try {
+      await supabase.auth.signOut();
+    } catch (err) {
+      console.error("Logout error:", err);
     }
 
-    // Let onAuthStateChange handle state reset (if successful) or force redirect
-    window.location.href = "/login";
+    // Forcefully clear it locally to prevent being permanently stuck
+    try {
+      const keysToRemove = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('sb-')) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach(k => localStorage.removeItem(k));
+    } catch (e) {
+      // ignore
+    }
+
+    setSession(null);
+    setUser(null);
+    setRole(null);
+    setFullName(null);
+
+    // Redirect to homepage after logout
+    window.location.href = "/";
   };
 
   return (

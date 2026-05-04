@@ -12,6 +12,7 @@ import { Farmlands } from "./components/Farmlands";
 import { LandingPage } from "./components/LandingPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Auth } from "./components/Auth";
+import { Compliance } from "./components/Compliance";
 
 export const router = createBrowserRouter([
   {
@@ -37,7 +38,7 @@ export const router = createBrowserRouter([
           },
           { 
             path: "compliance", 
-            element: <ProtectedRoute role="company"><Companies /></ProtectedRoute> // Reusing Companies for now as placeholder
+            element: <ProtectedRoute role="company"><Compliance /></ProtectedRoute>
           },
           { path: "carbon-credits", Component: CarbonCredits },
           { path: "companies", Component: Companies },
