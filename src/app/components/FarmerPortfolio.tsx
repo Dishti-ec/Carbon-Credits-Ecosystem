@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   ArrowUpRight,
   BadgeCheck,
@@ -69,18 +69,47 @@ export function FarmerPortfolio() {
   const { fullName } = useUserRole();
   const [walletTab, setWalletTab] = useState<WalletTab>("available");
   const [metric, setMetric] = useState<TrendMetric>("credits");
+  const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains("dark"));
 
-  const colors = {
-    page: "#0B1220",
-    card: "#111827",
-    border: "#1F2937",
-    text: "#E5E7EB",
-    subtext: "#9CA3AF",
-    green: "#16A34A",
-    blue: "#2563EB",
-    amber: "#F59E0B",
-    red: "#EF4444",
-  } as const;
+  useEffect(() => {
+    const el = document.documentElement;
+    const update = () => setIsDark(el.classList.contains("dark"));
+    update();
+
+    const observer = new MutationObserver(update);
+    observer.observe(el, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, []);
+
+  const colors = useMemo(() => {
+    const base = isDark
+      ? {
+          page: "#0B1220",
+          card: "#111827",
+          surface: "#0F172A",
+          border: "#1F2937",
+          text: "#E5E7EB",
+          subtext: "#9CA3AF",
+          chartGrid: "rgba(255,255,255,0.06)",
+        }
+      : {
+          page: "#f8faf6",
+          card: "#ffffff",
+          surface: "#f0f5ee",
+          border: "rgba(45, 106, 79, 0.15)",
+          text: "#1a2e1a",
+          subtext: "#5a6b5a",
+          chartGrid: "rgba(26,46,26,0.10)",
+        };
+
+    return {
+      ...base,
+      green: "#16A34A",
+      blue: "#2563EB",
+      amber: "#F59E0B",
+      red: "#EF4444",
+    } as const;
+  }, [isDark]);
 
   // --- Mock Portfolio Overview ---
   const totals = {
@@ -253,7 +282,7 @@ export function FarmerPortfolio() {
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full lg:w-auto">
-              <div className="rounded-2xl border p-3" style={{ backgroundColor: "#0F172A", borderColor: colors.border }}>
+              <div className="rounded-2xl border p-3" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
                 <div className="text-lg" style={{ fontWeight: 950 }}>
                   {availableCredits}
                 </div>
@@ -261,7 +290,7 @@ export function FarmerPortfolio() {
                   Available
                 </div>
               </div>
-              <div className="rounded-2xl border p-3" style={{ backgroundColor: "#0F172A", borderColor: colors.border }}>
+              <div className="rounded-2xl border p-3" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
                 <div className="text-lg" style={{ fontWeight: 950 }}>
                   {lockedCredits}
                 </div>
@@ -269,7 +298,7 @@ export function FarmerPortfolio() {
                   Locked
                 </div>
               </div>
-              <div className="rounded-2xl border p-3" style={{ backgroundColor: "#0F172A", borderColor: colors.border }}>
+              <div className="rounded-2xl border p-3" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
                 <div className="text-lg" style={{ fontWeight: 950 }}>
                   {totals.totalCreditsEarned}
                 </div>
@@ -277,7 +306,7 @@ export function FarmerPortfolio() {
                   Earned
                 </div>
               </div>
-              <div className="rounded-2xl border p-3" style={{ backgroundColor: "#0F172A", borderColor: colors.border }}>
+              <div className="rounded-2xl border p-3" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
                 <div className="text-lg" style={{ fontWeight: 950 }}>
                   {totals.activeProjects}
                 </div>
@@ -299,7 +328,7 @@ export function FarmerPortfolio() {
             </button>
             <button
               className="inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm border transition-transform active:scale-[0.99]"
-              style={{ backgroundColor: "#0F172A", borderColor: colors.border, color: colors.text, fontWeight: 900 }}
+              style={{ backgroundColor: colors.surface, borderColor: colors.border, color: colors.text, fontWeight: 900 }}
               title="Sell credits (simulated)"
             >
               <Wallet className="w-5 h-5" style={{ color: colors.subtext }} />
@@ -326,7 +355,7 @@ export function FarmerPortfolio() {
                 <div className="flex items-center gap-3">
                   <div
                     className="w-10 h-10 rounded-xl border flex items-center justify-center"
-                    style={{ backgroundColor: "#0F172A", borderColor: colors.border }}
+                    style={{ backgroundColor: colors.surface, borderColor: colors.border }}
                   >
                     <a.icon className="w-5 h-5" style={{ color: colors.subtext }} />
                   </div>
@@ -392,7 +421,7 @@ export function FarmerPortfolio() {
             </div>
 
             <div className="mt-4 grid grid-cols-1 gap-3">
-              <div className="rounded-2xl border p-4" style={{ backgroundColor: "#0F172A", borderColor: colors.border }}>
+              <div className="rounded-2xl border p-4" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
                 <div className="text-xs" style={{ color: colors.subtext, fontWeight: 800 }}>
                   Farm size
                 </div>
@@ -400,7 +429,7 @@ export function FarmerPortfolio() {
                   {farmProfile.sizeAcres} acres
                 </div>
               </div>
-              <div className="rounded-2xl border p-4" style={{ backgroundColor: "#0F172A", borderColor: colors.border }}>
+              <div className="rounded-2xl border p-4" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
                 <div className="text-xs" style={{ color: colors.subtext, fontWeight: 800 }}>
                   Crops
                 </div>
@@ -408,7 +437,7 @@ export function FarmerPortfolio() {
                   {farmProfile.crops.join(", ")}
                 </div>
               </div>
-              <div className="rounded-2xl border p-4 flex items-start gap-3" style={{ backgroundColor: "#0F172A", borderColor: colors.border }}>
+              <div className="rounded-2xl border p-4 flex items-start gap-3" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
                 <div
                   className="w-10 h-10 rounded-xl border flex items-center justify-center shrink-0"
                   style={{ borderColor: colors.border, backgroundColor: colors.card }}
@@ -427,7 +456,7 @@ export function FarmerPortfolio() {
                   </div>
                 </div>
               </div>
-              <div className="rounded-2xl border p-4" style={{ backgroundColor: "#0F172A", borderColor: colors.border }}>
+              <div className="rounded-2xl border p-4" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
                 <div className="text-xs" style={{ color: colors.subtext, fontWeight: 800 }}>
                   Practices
                 </div>
@@ -467,7 +496,7 @@ export function FarmerPortfolio() {
                       onClick={() => setMetric(m)}
                       className="px-3 py-2 rounded-2xl border text-xs transition-transform active:scale-[0.99]"
                       style={{
-                        backgroundColor: active ? "#0F172A" : colors.card,
+                        backgroundColor: active ? colors.surface : colors.card,
                         borderColor: active ? `${c}66` : colors.border,
                         color: colors.text,
                         fontWeight: 900,
@@ -497,7 +526,7 @@ export function FarmerPortfolio() {
                       <stop offset="95%" stopColor={meta.color} stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.06)" />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={colors.chartGrid} />
                   <XAxis dataKey="month" tick={{ fontSize: 12, fill: colors.subtext }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fontSize: 12, fill: colors.subtext }} axisLine={false} tickLine={false} />
                   <RechartsTooltip
@@ -524,7 +553,7 @@ export function FarmerPortfolio() {
                 { label: "Monthly growth", value: `+${clamp(yoyChange.value, 0, 99).toFixed(1)}%` },
                 { label: "Active projects", value: `${totals.activeProjects}` },
               ].map((x) => (
-                <div key={x.label} className="rounded-2xl border px-3 py-2" style={{ backgroundColor: "#0F172A", borderColor: colors.border }}>
+                <div key={x.label} className="rounded-2xl border px-3 py-2" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
                   <div className="text-[11px]" style={{ color: colors.subtext, fontWeight: 800 }}>
                     {x.label}
                   </div>
@@ -551,7 +580,7 @@ export function FarmerPortfolio() {
             </div>
 
             <div className="mt-4 space-y-3">
-              <div className="rounded-2xl border p-4" style={{ backgroundColor: "#0F172A", borderColor: colors.border }}>
+              <div className="rounded-2xl border p-4" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
                 <div className="text-xs" style={{ color: colors.subtext, fontWeight: 800 }}>
                   Total earnings from credits
                 </div>
@@ -560,7 +589,7 @@ export function FarmerPortfolio() {
                 </div>
               </div>
 
-              <div className="rounded-2xl border p-4" style={{ backgroundColor: "#0F172A", borderColor: colors.border }}>
+              <div className="rounded-2xl border p-4" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
                 <div className="text-xs" style={{ color: colors.subtext, fontWeight: 800 }}>
                   Recent transactions
                 </div>
@@ -639,7 +668,7 @@ export function FarmerPortfolio() {
                       value={t.id}
                       className="rounded-2xl border px-3 py-2 text-xs"
                       style={{
-                        backgroundColor: walletTab === t.id ? "#0F172A" : colors.card,
+                        backgroundColor: walletTab === t.id ? colors.surface : colors.card,
                         borderColor: walletTab === t.id ? `${colors.blue}66` : colors.border,
                         color: colors.text,
                         fontWeight: 950,
@@ -665,7 +694,7 @@ export function FarmerPortfolio() {
                         <div
                           key={e.id}
                           className="rounded-2xl border p-4 flex items-center justify-between gap-3"
-                          style={{ backgroundColor: "#0F172A", borderColor: colors.border }}
+                          style={{ backgroundColor: colors.surface, borderColor: colors.border }}
                         >
                           <div className="min-w-0">
                             <div className="text-sm truncate" style={{ fontWeight: 950 }}>
@@ -726,7 +755,7 @@ export function FarmerPortfolio() {
               </div>
               <button
                 className="rounded-2xl border px-3 py-2 text-xs"
-                style={{ backgroundColor: "#0F172A", borderColor: colors.border, color: colors.text, fontWeight: 950 }}
+                style={{ backgroundColor: colors.surface, borderColor: colors.border, color: colors.text, fontWeight: 950 }}
                 title="Join project (simulated)"
               >
                 Join project
@@ -737,7 +766,7 @@ export function FarmerPortfolio() {
               {projects.map((p) => {
                 const dot = p.status === "Active" ? colors.green : colors.subtext;
                 return (
-                  <div key={p.id} className="rounded-3xl border p-5" style={{ backgroundColor: "#0F172A", borderColor: colors.border }}>
+                  <div key={p.id} className="rounded-3xl border p-5" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
                         <div className="text-sm truncate" style={{ fontWeight: 950 }}>
@@ -825,7 +854,7 @@ export function FarmerPortfolio() {
                       </div>
                       {idx < proofTimeline.length - 1 && <div className="w-px h-10" style={{ backgroundColor: colors.border }} />}
                     </div>
-                    <div className="min-w-0 flex-1 rounded-2xl border p-4" style={{ backgroundColor: "#0F172A", borderColor: colors.border }}>
+                    <div className="min-w-0 flex-1 rounded-2xl border p-4" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
                           <div className="text-sm truncate" style={{ fontWeight: 950 }}>
@@ -872,7 +901,7 @@ export function FarmerPortfolio() {
                   <div
                     key={a.id}
                     className="rounded-3xl border p-4"
-                    style={{ backgroundColor: "#0F172A", borderColor: colors.border, borderLeftWidth: 4, borderLeftColor: severityColor }}
+                    style={{ backgroundColor: colors.surface, borderColor: colors.border, borderLeftWidth: 4, borderLeftColor: severityColor }}
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-start gap-3 min-w-0">
@@ -915,7 +944,7 @@ export function FarmerPortfolio() {
             </div>
             <div className="mt-4 space-y-3">
               {insights.map((i) => (
-                <div key={i.id} className="rounded-3xl border p-4" style={{ backgroundColor: "#0F172A", borderColor: colors.border }}>
+                <div key={i.id} className="rounded-3xl border p-4" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
                   <div className="text-sm" style={{ fontWeight: 900 }}>
                     “{i.text}”
                   </div>
@@ -944,7 +973,7 @@ export function FarmerPortfolio() {
                 { title: "How to increase earnings", desc: "Best practices that raise credits" },
                 { title: "Upload proof correctly", desc: "Geo-tagging, photos, logs" },
               ].map((c) => (
-                <div key={c.title} className="rounded-3xl border p-4" style={{ backgroundColor: "#0F172A", borderColor: colors.border }}>
+                <div key={c.title} className="rounded-3xl border p-4" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
                   <div className="text-sm" style={{ fontWeight: 950 }}>
                     {c.title}
                   </div>

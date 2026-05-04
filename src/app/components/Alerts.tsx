@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Bell,
   Calendar,
@@ -314,11 +314,22 @@ export function Alerts() {
   const [filterStatus, setFilterStatus] = useState<"all" | AlertStatus>("all");
   const [filterDate, setFilterDate] = useState<"all" | "7d" | "30d">("all");
   const [search, setSearch] = useState("");
+  const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains("dark"));
 
   const [alertList, setAlertList] = useState<Alert[]>([]);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [message, setMessage] = useState<{ type: "success" | "info"; text: string } | null>(null);
   const messageTimer = useRef<number | null>(null);
+
+  useEffect(() => {
+    const el = document.documentElement;
+    const update = () => setIsDark(el.classList.contains("dark"));
+    update();
+
+    const observer = new MutationObserver(update);
+    observer.observe(el, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const roleAlerts = seedAlerts.filter((a) => a.targetRole === "all" || a.targetRole === role);
@@ -339,17 +350,35 @@ export function Alerts() {
     };
   }, [message]);
 
-  const colors = {
-    page: "#0F172A",
-    panel: "#111827",
-    border: "#1F2937",
-    text: "#E5E7EB",
-    subtext: "#9CA3AF",
-    critical: "#EF4444",
-    warning: "#F59E0B",
-    info: "#3B82F6",
-    success: "#10B981",
-  } as const;
+  const colors = useMemo(() => {
+    const base = isDark
+      ? {
+          page: "#0F172A",
+          panel: "#111827",
+          surface: "#0B1220",
+          border: "#1F2937",
+          text: "#E5E7EB",
+          subtext: "#9CA3AF",
+          grid: "rgba(255,255,255,0.06)",
+        }
+      : {
+          page: "#f8faf6",
+          panel: "#ffffff",
+          surface: "#f0f5ee",
+          border: "rgba(45, 106, 79, 0.15)",
+          text: "#1a2e1a",
+          subtext: "#5a6b5a",
+          grid: "rgba(26,46,26,0.08)",
+        };
+
+    return {
+      ...base,
+      critical: "#EF4444",
+      warning: "#F59E0B",
+      info: "#3B82F6",
+      success: "#10B981",
+    } as const;
+  }, [isDark]);
 
   const severityMeta: Record<AlertSeverity, { label: string; color: string }> = {
     critical: { label: "Critical", color: colors.critical },
@@ -578,7 +607,7 @@ export function Alerts() {
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
               <div
                 className="flex items-center gap-2 rounded-xl border px-3 py-2"
-                style={{ backgroundColor: "#0B1220", borderColor: colors.border }}
+                style={{ backgroundColor: colors.surface, borderColor: colors.border }}
               >
                 <Search className="w-4 h-4" style={{ color: colors.subtext }} />
                 <input
@@ -618,7 +647,7 @@ export function Alerts() {
                     onClick={() => setTab(t.id)}
                     className="inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm transition-transform active:scale-[0.98]"
                     style={{
-                      backgroundColor: isActive ? "#0B1220" : "transparent",
+                      backgroundColor: isActive ? colors.surface : "transparent",
                       border: `1px solid ${isActive ? colors.info : colors.border}`,
                       color: colors.text,
                       fontWeight: 700,
@@ -654,7 +683,7 @@ export function Alerts() {
                 value={filterDate}
                 onChange={(e) => setFilterDate(e.target.value as typeof filterDate)}
                 className="rounded-xl px-3 py-2 text-sm outline-none"
-                style={{ backgroundColor: "#0B1220", border: `1px solid ${colors.border}`, color: colors.text }}
+                style={{ backgroundColor: colors.surface, border: `1px solid ${colors.border}`, color: colors.text }}
               >
                 <option value="all">Date: Any</option>
                 <option value="7d">Last 7 days</option>
@@ -665,7 +694,7 @@ export function Alerts() {
                 value={filterSeverity}
                 onChange={(e) => setFilterSeverity(e.target.value as typeof filterSeverity)}
                 className="rounded-xl px-3 py-2 text-sm outline-none"
-                style={{ backgroundColor: "#0B1220", border: `1px solid ${colors.border}`, color: colors.text }}
+                style={{ backgroundColor: colors.surface, border: `1px solid ${colors.border}`, color: colors.text }}
               >
                 <option value="all">Severity: Any</option>
                 <option value="critical">Critical</option>
@@ -678,7 +707,7 @@ export function Alerts() {
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value as typeof filterStatus)}
                 className="rounded-xl px-3 py-2 text-sm outline-none"
-                style={{ backgroundColor: "#0B1220", border: `1px solid ${colors.border}`, color: colors.text }}
+                style={{ backgroundColor: colors.surface, border: `1px solid ${colors.border}`, color: colors.text }}
               >
                 <option value="all">Status: Any</option>
                 <option value="unread">Unread</option>
@@ -786,7 +815,7 @@ export function Alerts() {
                   }}
                   className="w-full text-left rounded-2xl border p-4 transition-transform hover:scale-[1.01] active:scale-[0.99]"
                   style={{
-                    backgroundColor: isActive ? "#0B1220" : colors.panel,
+                    backgroundColor: isActive ? colors.surface : colors.panel,
                     borderColor: isActive ? `${colors.info}77` : colors.border,
                     boxShadow: isUnread ? `0 0 0 1px ${sev.color}33 inset` : undefined,
                     borderLeftWidth: 4,
@@ -803,7 +832,7 @@ export function Alerts() {
                       </div>
                       <div
                         className="w-10 h-10 rounded-xl border flex items-center justify-center"
-                        style={{ backgroundColor: "#0B1220", borderColor: colors.border }}
+                        style={{ backgroundColor: colors.surface, borderColor: colors.border }}
                         title="Entity"
                       >
                         <EntityIcon className="w-5 h-5" style={{ color: colors.subtext }} />
@@ -823,7 +852,7 @@ export function Alerts() {
                                 style={{
                                   color: colors.subtext,
                                   borderColor: colors.border,
-                                  backgroundColor: "#0B1220",
+                                  backgroundColor: colors.surface,
                                   fontWeight: 800,
                                 }}
                               >
@@ -866,7 +895,7 @@ export function Alerts() {
                           className="px-2 py-0.5 rounded-full text-xs border"
                           style={{
                             borderColor: colors.border,
-                            backgroundColor: "#0B1220",
+                            backgroundColor: colors.surface,
                             color: colors.subtext,
                             fontWeight: 800,
                           }}
@@ -928,7 +957,7 @@ export function Alerts() {
                             }}
                             className="inline-flex items-center gap-2 rounded-xl px-3 py-2 text-xs transition-transform hover:scale-[1.02] active:scale-[0.98]"
                             style={{
-                              backgroundColor: "#0B1220",
+                              backgroundColor: colors.surface,
                               border: `1px solid ${colors.border}`,
                               color: colors.text,
                               fontWeight: 900,
@@ -1030,7 +1059,7 @@ export function Alerts() {
 
                     <div
                       className="rounded-2xl border p-3"
-                      style={{ borderColor: colors.border, backgroundColor: "#0B1220" }}
+                      style={{ borderColor: colors.border, backgroundColor: colors.surface }}
                     >
                       <div className="text-xs" style={{ color: colors.subtext, fontWeight: 800 }}>
                         Why it matters
@@ -1085,7 +1114,7 @@ export function Alerts() {
                           <div
                             key={`${m.label}-${m.value}`}
                             className="rounded-xl border px-3 py-2 flex items-center justify-between gap-3"
-                            style={{ backgroundColor: "#0B1220", borderColor: colors.border }}
+                            style={{ backgroundColor: colors.surface, borderColor: colors.border }}
                           >
                             <div className="text-xs" style={{ color: colors.subtext, fontWeight: 800 }}>
                               {m.label}
@@ -1102,7 +1131,7 @@ export function Alerts() {
                     </div>
 
                     {/* Smart features */}
-                    <div className="rounded-2xl border p-3" style={{ backgroundColor: "#0B1220", borderColor: colors.border }}>
+                    <div className="rounded-2xl border p-3" style={{ backgroundColor: colors.surface, borderColor: colors.border }}>
                       <div className="flex items-center justify-between gap-3">
                         <div className="min-w-0">
                           <div className="text-xs" style={{ color: colors.subtext, fontWeight: 900 }}>
@@ -1228,7 +1257,7 @@ export function Alerts() {
                   <div
                     key={a.id}
                     className="rounded-2xl border p-3 flex items-start justify-between gap-3"
-                    style={{ backgroundColor: "#0B1220", borderColor: colors.border, borderLeftWidth: 4, borderLeftColor: sev.color }}
+                    style={{ backgroundColor: colors.surface, borderColor: colors.border, borderLeftWidth: 4, borderLeftColor: sev.color }}
                   >
                     <div className="min-w-0">
                       <div className="text-sm truncate" style={{ color: colors.text, fontWeight: 900 }}>

@@ -10,7 +10,13 @@ interface TopBarProps {
 export function TopBar({ setIsMobileMenuOpen }: TopBarProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem("theme");
+    if (saved === "dark") return true;
+    if (saved === "light") return false;
+    // Default to light mode on first load
+    return false;
+  });
   const { user, role, fullName, logout } = useUserRole();
   const navigate = useNavigate();
 
@@ -20,6 +26,7 @@ export function TopBar({ setIsMobileMenuOpen }: TopBarProps) {
     } else {
       document.documentElement.classList.remove('dark');
     }
+    localStorage.setItem("theme", darkMode ? "dark" : "light");
   }, [darkMode]);
 
   const handleLogout = async () => {

@@ -1,7 +1,17 @@
+import React from "react";
 import { Link } from "react-router";
-import { Leaf, ArrowRight, TrendingUp, Trees, DollarSign, LocateFixed, TreePine, Calculator, ShieldCheck, BadgeCheck, FileText, FlaskConical, Satellite, Map, Check, RefreshCw, Clock } from "lucide-react";
+import { Leaf, ArrowRight, TrendingUp, Trees, DollarSign, LocateFixed, TreePine, Calculator, ShieldCheck, BadgeCheck, FileText, FlaskConical, Satellite, Map, Check, RefreshCw, Clock, Target, Users, Search, Globe } from "lucide-react";
 
 export function LandingPage() {
+  const heroBg = new URL(
+    "../../assets/images/Landing_Page-header.jpeg",
+    import.meta.url,
+  ).toString();
+  const cmcBg = new URL(
+    "../../assets/images/Landing_Page_CMC-bg.png",
+    import.meta.url,
+  ).toString();
+
   return (
     <div className="min-h-screen bg-background font-[Inter,DM_Sans,sans-serif] text-foreground scroll-smooth flex flex-col">
       {/* Navbar for Landing Page */}
@@ -17,7 +27,7 @@ export function LandingPage() {
         <div className="flex items-center gap-4">
           <a href="#features" className="hidden md:block text-sm font-medium hover:text-primary transition-colors">Features</a>
           <a href="#calculator" className="hidden md:block text-sm font-medium hover:text-primary transition-colors">Calculation</a>
-          <a href="#projects" className="hidden md:block text-sm font-medium hover:text-primary transition-colors">Projects</a>
+          <a href="#about-us" className="hidden md:block text-sm font-medium hover:text-primary transition-colors">About Us</a>
           <Link to="/login" className="hidden md:block text-sm font-medium hover:text-primary transition-colors">Login</Link>
           <Link to="/app/dashboard" className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors">
             Go to Dashboard
@@ -49,62 +59,202 @@ export function LandingPage() {
       </div>
 
       {/* Hero Section */}
-      <header className="relative pt-24 pb-32 px-6 flex flex-col items-center justify-center text-center overflow-hidden border-b border-border">
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-background to-background"></div>
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary text-secondary-foreground text-sm font-medium mb-6 border border-border">
+      <header className="relative pt-24 pb-32 px-6 flex flex-col items-start justify-start text-left overflow-hidden border-b border-border">
+        <div className="absolute inset-0 z-0">
+          <img
+            src={heroBg}
+            alt=""
+            aria-hidden="true"
+            className="h-full w-full object-cover"
+          />
+          {/* Subtle contrast for readability without “glass” */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-black/35" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/45 via-black/15 to-transparent" />
+        </div>
+        <div className="relative z-10 max-w-2xl w-full pt-10 md:pt-14">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/30 text-white text-sm font-medium mb-6 border border-white/20">
             <span className="flex h-2 w-2 rounded-full bg-primary animate-pulse"></span>
             Unified Indian Carbon Market (ICM)
-        </div>
-        <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 max-w-4xl text-foreground">
-          Bridging the gap between <span className="text-primary">Ecology</span> and <span className="text-primary">Economy</span>
-        </h1>
-        <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-10">
-          The global imperative to mitigate climate change has transitioned from peripheral CSR to a core economic driver. Join the Carbon Credit Trading Scheme (CCTS) today.
-        </p>
-        <div className="flex sm:flex-row flex-col gap-4">
-          <a href="#features" className="px-6 py-3 bg-primary text-primary-foreground rounded-xl font-medium hover:bg-primary/90 transition-all flex items-center justify-center gap-2">
-            Explore Ecosystem <ArrowRight className="w-5 h-5"/>
-          </a>
-          <Link to="/login" className="px-6 py-3 bg-secondary text-secondary-foreground rounded-xl font-medium hover:bg-secondary/80 transition-all flex items-center justify-center gap-2 border border-border">
-            Login / Register
-          </Link>
+          </div>
+          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 text-white drop-shadow-[0_4px_14px_rgba(0,0,0,0.45)]">
+            Bridging the gap between <span className="text-primary">Ecology</span> and <span className="text-primary">Economy</span>
+          </h1>
+          <p className="text-lg md:text-xl text-white/90 max-w-xl mb-10 drop-shadow-[0_2px_10px_rgba(0,0,0,0.45)]">
+            The global imperative to mitigate climate change has transitioned from peripheral CSR to a core economic driver. Join the Carbon Credit Trading Scheme (CCTS) today.
+          </p>
+          <div className="flex sm:flex-row flex-col gap-4">
+            <a href="#features" className="px-6 py-3 bg-primary text-primary-foreground rounded-xl font-medium hover:bg-primary/90 transition-all flex items-center justify-center gap-2">
+              Explore Ecosystem <ArrowRight className="w-5 h-5"/>
+            </a>
+            <Link to="/login" className="px-6 py-3 bg-white/10 text-white rounded-xl font-medium hover:bg-white/15 transition-all flex items-center justify-center gap-2 border border-white/25">
+              Login / Register
+            </Link>
+          </div>
         </div>
       </header>
 
-      {/* What are Carbon Credits */}
-      <section id="about" className="py-20 px-6 max-w-7xl mx-auto w-full">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-                <h2 className="text-3xl font-bold mb-6">What are Carbon Credits?</h2>
-                <div className="space-y-4 text-muted-foreground leading-relaxed">
-                    <p>
-                        A carbon credit serves as a standardized financial instrument, representing the removal or avoidance of one metric tonne of carbon dioxide equivalent (<strong className="text-foreground">CO₂e</strong>) from the atmosphere.
-                    </p>
-                    <p>
-                        These credits function as <em>"pollution permits"</em> within a regulated framework, creating a market price for carbon that incentivizes cost-effective emission reductions. For India, this transition is crystallized in the Carbon Credit Trading Scheme (CCTS).
-                    </p>
-                    <p>
-                        For the corporate sector, carbon credits are essential for managing residual emissions that cannot be eliminated through current technological means, providing stakeholders with audited proof of their decarbonization claims.
-                    </p>
-                </div>
+      {/* How Carbon Credits Work - Refined High Fidelity Section */}
+      <section id="about" className="py-28 px-6 w-full bg-[#fdfdfd] overflow-hidden">
+        <div className="max-w-6xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-20 flex flex-col items-center">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold uppercase tracking-wider border border-emerald-100 mb-6 shadow-sm">
+              <Leaf className="w-3.5 h-3.5" />
+              Carbon Credits 101
             </div>
-            <div className="bg-card border border-border p-8 rounded-3xl shadow-sm relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-bl-full -z-10 group-hover:scale-110 transition-transform"></div>
-                <div className="flex items-center gap-4 mb-6">
-                    <div className="w-12 h-12 bg-primary/20 text-primary rounded-xl flex items-center justify-center">
-                        <TrendingUp className="w-6 h-6" />
-                    </div>
-                    <div>
-                        <h3 className="font-bold text-xl">Economic Imperative</h3>
-                        <p className="text-sm text-muted-foreground">Competitiveness & Compliance</p>
-                    </div>
-                </div>
-                <ul className="space-y-4 text-sm font-medium text-foreground p-0">
-                    <li className="flex items-start gap-3"><ShieldCheck className="w-5 h-5 text-primary shrink-0"/> Helps avoid penalizations like the EU's Carbon Border Adjustment Mechanism (CBAM).</li>
-                    <li className="flex items-start gap-3"><ShieldCheck className="w-5 h-5 text-primary shrink-0"/> Fulfills India’s NDCs targeting a 45% reduction in emission intensity by 2030.</li>
-                    <li className="flex items-start gap-3"><ShieldCheck className="w-5 h-5 text-primary shrink-0"/> Operationalizes the unified Indian Carbon Market (ICM).</li>
-                </ul>
+            <h2 className="text-4xl md:text-5xl font-black text-[#1a4332] mb-4 tracking-tight">
+              How Carbon Credits Work
+            </h2>
+            <p className="text-lg text-slate-500 font-medium max-w-xl mx-auto">
+              A simple 4-step cycle driving climate action
+            </p>
+            <div className="flex items-center gap-4 mt-8">
+              <div className="w-12 h-[1px] bg-emerald-200"></div>
+              <Leaf className="w-5 h-5 text-emerald-700/40" />
+              <div className="w-12 h-[1px] bg-emerald-200"></div>
             </div>
+          </div>
+
+          {/* The Loop Container */}
+          <div className="relative max-w-5xl mx-auto pt-6 pb-20 px-8">
+            {/* The Track (Continuous Loop) */}
+            <div className="absolute inset-0 border-[32px] border-emerald-50 rounded-[150px] -z-10 shadow-[inset_0_4px_12px_rgba(0,0,0,0.03)]"></div>
+            
+            {/* Top Dark Segment (Unified with Loop) */}
+            <div className="absolute -top-[32px] left-0 right-0 h-[70px] bg-[#1a4332] rounded-t-[150px] flex items-center justify-between px-20 text-white text-[11px] font-black tracking-[0.25em] z-20 shadow-lg">
+              <div className="flex items-center gap-4">
+                <span className="bg-white text-[#1a4332] w-6 h-6 rounded-full flex items-center justify-center text-[10px]">01</span>
+                MEASURE
+              </div>
+              <ArrowRight className="w-4 h-4 text-white/30" />
+              <div className="flex items-center gap-4">
+                <span className="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-[10px]">02</span>
+                REDUCE
+              </div>
+              <ArrowRight className="w-4 h-4 text-white/30" />
+              <div className="flex items-center gap-4">
+                <span className="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-[10px]">03</span>
+                VERIFY
+              </div>
+              <ArrowRight className="w-4 h-4 text-white/30" />
+              <div className="flex items-center gap-4">
+                <span className="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-[10px]">04</span>
+                ISSUE & TRADE
+              </div>
+            </div>
+
+            {/* Decorative Icons on curves */}
+            <div className="absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-white border-[7px] border-[#1a4332] flex items-center justify-center text-[#1a4332] shadow-xl z-30">
+              <Leaf className="w-6 h-6 fill-[#1a4332]" />
+            </div>
+            <div className="absolute right-0 top-1/2 translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-white border-[7px] border-emerald-50 flex items-center justify-center text-emerald-300 shadow-xl z-30">
+              <TrendingUp className="w-6 h-6" />
+            </div>
+
+            {/* Steps Content Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 py-24 relative z-10">
+              {/* Step 1: Measure */}
+              <div className="flex flex-col items-center text-center px-4">
+                <div className="relative mb-8 group">
+                  <div className="w-24 h-24 rounded-3xl bg-emerald-50/30 flex items-center justify-center border border-emerald-100/50 group-hover:bg-emerald-50 transition-colors shadow-sm">
+                    <div className="relative">
+                      <Calculator className="w-12 h-12 text-emerald-800/80" />
+                      <Search className="absolute -bottom-1 -right-1 w-5 h-5 text-emerald-900 bg-white rounded-full p-0.5 border border-emerald-100 shadow-sm" />
+                    </div>
+                  </div>
+                </div>
+                <div className="w-7 h-[2px] bg-emerald-100 mb-5"></div>
+                <p className="text-[14px] font-bold text-slate-500 leading-relaxed max-w-[170px]">
+                  Measure emissions to establish a baseline.
+                </p>
+              </div>
+
+              {/* Step 2: Reduce */}
+              <div className="flex flex-col items-center text-center px-4 border-l border-slate-100/50">
+                <div className="relative mb-8 group">
+                  <div className="w-24 h-24 rounded-3xl bg-emerald-50/30 flex items-center justify-center border border-emerald-100/50 group-hover:bg-emerald-50 transition-colors shadow-sm">
+                    <div className="relative">
+                      <FileText className="w-12 h-12 text-emerald-800/80" />
+                      <Leaf className="absolute -bottom-1 -right-1 w-5 h-5 text-emerald-600 bg-white rounded-full p-0.5 border border-emerald-100 shadow-sm" />
+                    </div>
+                  </div>
+                </div>
+                <div className="w-7 h-[2px] bg-emerald-100 mb-5"></div>
+                <p className="text-[14px] font-bold text-slate-500 leading-relaxed max-w-[170px]">
+                  Implement actions to reduce emissions.
+                </p>
+              </div>
+
+              {/* Step 3: Verify */}
+              <div className="flex flex-col items-center text-center px-4 border-l border-slate-100/50">
+                <div className="relative mb-8 group">
+                  <div className="w-24 h-24 rounded-3xl bg-emerald-50/30 flex items-center justify-center border border-emerald-100/50 group-hover:bg-emerald-50 transition-colors shadow-sm">
+                    <ShieldCheck className="w-12 h-12 text-emerald-800/80" />
+                  </div>
+                </div>
+                <div className="w-7 h-[2px] bg-emerald-100 mb-5"></div>
+                <p className="text-[14px] font-bold text-slate-500 leading-relaxed max-w-[170px]">
+                  Independent third parties verify the emissions reductions.
+                </p>
+              </div>
+
+              {/* Step 4: Issue & Trade */}
+              <div className="flex flex-col items-center text-center px-4 border-l border-slate-100/50">
+                <div className="relative mb-8 group">
+                  <div className="w-24 h-24 rounded-3xl bg-emerald-50/30 flex items-center justify-center border border-emerald-100/50 group-hover:bg-emerald-50 transition-colors shadow-sm">
+                    <div className="relative">
+                      <FileText className="w-12 h-12 text-emerald-800/80" />
+                      <BadgeCheck className="absolute -bottom-1 -right-1 w-6 h-6 text-emerald-600 bg-white rounded-full border border-emerald-100 shadow-sm" />
+                    </div>
+                  </div>
+                </div>
+                <div className="w-7 h-[2px] bg-emerald-100 mb-5"></div>
+                <p className="text-[14px] font-bold text-slate-500 leading-relaxed max-w-[170px]">
+                  Verified reductions are issued as credits and can be traded.
+                </p>
+              </div>
+            </div>
+
+            {/* Bottom Summary Bubble (Sits on Loop Track) */}
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-[95%] md:w-[620px] z-40">
+              <div className="bg-white border border-emerald-50 rounded-[40px] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.08)] flex items-center gap-6">
+                <div className="w-14 h-14 rounded-full bg-[#1a4332] text-white flex items-center justify-center shrink-0 shadow-lg">
+                  <RefreshCw className="w-7 h-7 animate-spin-slow" />
+                </div>
+                <p className="text-sm font-bold text-[#1a4332] leading-snug">
+                  A transparent cycle that turns climate commitment into real, measurable impact.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Footer Badges */}
+          <div className="mt-28 grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="flex items-center gap-4 group">
+              <div className="w-11 h-11 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:bg-emerald-700 group-hover:text-white transition-all shadow-sm border border-emerald-100">
+                <Globe className="w-5 h-5" />
+              </div>
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] group-hover:text-emerald-900 transition-colors">Drives real climate impact</span>
+            </div>
+            <div className="flex items-center gap-4 group">
+              <div className="w-11 h-11 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:bg-emerald-700 group-hover:text-white transition-all shadow-sm border border-emerald-100">
+                <Target className="w-5 h-5" />
+              </div>
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] group-hover:text-emerald-900 transition-colors">Supports net zero goals</span>
+            </div>
+            <div className="flex items-center gap-4 group">
+              <div className="w-11 h-11 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:bg-emerald-700 group-hover:text-white transition-all shadow-sm border border-emerald-100">
+                <Users className="w-5 h-5" />
+              </div>
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] group-hover:text-emerald-900 transition-colors">Creates market value</span>
+            </div>
+            <div className="flex items-center gap-4 group">
+              <div className="w-11 h-11 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:bg-emerald-700 group-hover:text-white transition-all shadow-sm border border-emerald-100">
+                <ShieldCheck className="w-5 h-5" />
+              </div>
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] group-hover:text-emerald-900 transition-colors">Builds a sustainable future</span>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -143,33 +293,133 @@ export function LandingPage() {
       </section>
 
       {/* Compliance Cycle & Roles */}
-      <section id="features" className="py-20 px-6 max-w-7xl mx-auto w-full">
+      <section id="features" className="relative py-20 px-6 w-full overflow-hidden">
+          {/* Background image */}
+          <div className="absolute inset-0 -z-10">
+            <img
+              src={cmcBg}
+              alt=""
+              aria-hidden="true"
+              className="h-full w-full object-cover opacity-35"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/70 to-background/90" />
+          </div>
+
+          <div className="max-w-7xl mx-auto w-full">
           <div className="text-center mb-16">
               <h2 className="text-3xl font-bold mb-4">The Compliance Mechanism Cycle</h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">Obligated entities must adhere to a comprehensive cycle of target setting, monitoring, and verification.</p>
           </div>
 
-          <div className="grid md:grid-cols-4 gap-6">
-              <div className="p-6 border border-border rounded-2xl relative overflow-hidden bg-card shadow-sm">
-                  <div className="text-5xl font-black text-primary/5 absolute -top-2 -right-2">01</div>
-                  <h3 className="font-bold mb-2 relative z-10">Baseline Verification</h3>
-                  <p className="text-sm text-muted-foreground relative z-10">Established using FY 2023-24 emissions data as the benchmark.</p>
+          <div className="relative">
+            {/* subtle background wash like reference */}
+            <div className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/5 via-transparent to-transparent rounded-[40px]" />
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-6 place-items-center">
+              {/* Step 01 */}
+              <div className="relative w-[260px]">
+                <div
+                  className="relative mx-auto h-[240px] w-[240px] rounded-full p-[10px] shadow-sm"
+                  style={{
+                    background:
+                      "conic-gradient(from 210deg, rgba(34,197,94,0.95) 0 80deg, rgba(34,197,94,0.18) 80deg 360deg)",
+                  }}
+                >
+                  <div className="relative h-full w-full rounded-full bg-card/90 backdrop-blur border border-border flex flex-col items-center justify-center text-center px-6">
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary text-primary-foreground px-3 py-1 text-xs font-bold border border-primary/30 shadow-sm">
+                      01
+                    </div>
+                    <div className="w-14 h-14 rounded-full bg-primary/15 text-primary flex items-center justify-center mb-4">
+                      <FileText className="w-7 h-7" />
+                    </div>
+                    <h3 className="font-bold text-sm text-foreground">Baseline Verification</h3>
+                    <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+                      Established using FY 2023-24 emissions data as the benchmark.
+                    </p>
+                  </div>
+                </div>
               </div>
-              <div className="p-6 border border-border rounded-2xl relative overflow-hidden bg-card shadow-sm">
-                  <div className="text-5xl font-black text-primary/5 absolute -top-2 -right-2">02</div>
-                  <h3 className="font-bold mb-2 relative z-10">MRV Plan</h3>
-                  <p className="text-sm text-muted-foreground relative z-10">Detailed Monitoring & Verification plan for Scope 1 and Scope 2 emissions.</p>
+
+              {/* Step 02 */}
+              <div className="relative w-[260px]">
+                <div
+                  className="relative mx-auto h-[240px] w-[240px] rounded-full p-[10px] shadow-sm"
+                  style={{
+                    background:
+                      "conic-gradient(from 210deg, rgba(34,197,94,0.95) 0 115deg, rgba(34,197,94,0.18) 115deg 360deg)",
+                  }}
+                >
+                  <div className="relative h-full w-full rounded-full bg-card/90 backdrop-blur border border-border flex flex-col items-center justify-center text-center px-6">
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary text-primary-foreground px-3 py-1 text-xs font-bold border border-primary/30 shadow-sm">
+                      02
+                    </div>
+                    <div className="w-14 h-14 rounded-full bg-primary/15 text-primary flex items-center justify-center mb-4">
+                      <Satellite className="w-7 h-7" />
+                    </div>
+                    <h3 className="font-bold text-sm text-foreground">MRV Plan</h3>
+                    <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+                      Detailed Monitoring & Verification plan for Scope 1 and Scope 2 emissions.
+                    </p>
+                  </div>
+                </div>
               </div>
-              <div className="p-6 border border-border rounded-2xl relative overflow-hidden bg-card shadow-sm">
-                  <div className="text-5xl font-black text-primary/5 absolute -top-2 -right-2">03</div>
-                  <h3 className="font-bold mb-2 relative z-10">Audit by ACVA</h3>
-                  <p className="text-sm text-muted-foreground relative z-10">Independent auditing by an Accredited Carbon Verification Agency.</p>
+
+              {/* Step 03 */}
+              <div className="relative w-[260px]">
+                <div
+                  className="relative mx-auto h-[240px] w-[240px] rounded-full p-[10px] shadow-sm"
+                  style={{
+                    background:
+                      "conic-gradient(from 210deg, rgba(34,197,94,0.95) 0 155deg, rgba(34,197,94,0.18) 155deg 360deg)",
+                  }}
+                >
+                  <div className="relative h-full w-full rounded-full bg-card/90 backdrop-blur border border-border flex flex-col items-center justify-center text-center px-6">
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary text-primary-foreground px-3 py-1 text-xs font-bold border border-primary/30 shadow-sm">
+                      03
+                    </div>
+                    <div className="w-14 h-14 rounded-full bg-primary/15 text-primary flex items-center justify-center mb-4">
+                      <ShieldCheck className="w-7 h-7" />
+                    </div>
+                    <h3 className="font-bold text-sm text-foreground">Audit by ACVA</h3>
+                    <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+                      Independent auditing by an Accredited Carbon Verification Agency.
+                    </p>
+                  </div>
+                </div>
               </div>
-              <div className="p-6 border border-border rounded-2xl relative overflow-hidden bg-card shadow-sm">
-                  <div className="text-5xl font-black text-primary/5 absolute -top-2 -right-2">04</div>
-                  <h3 className="font-bold mb-2 relative z-10">Issuance/Surrender</h3>
-                  <p className="text-sm text-muted-foreground relative z-10">BEE issues CCCs if target is beaten; otherwise, credits must be purchased.</p>
+
+              {/* Step 04 */}
+              <div className="relative w-[260px]">
+                <div
+                  className="relative mx-auto h-[240px] w-[240px] rounded-full p-[10px] shadow-sm"
+                  style={{
+                    background:
+                      "conic-gradient(from 210deg, rgba(34,197,94,0.95) 0 200deg, rgba(34,197,94,0.18) 200deg 360deg)",
+                  }}
+                >
+                  <div className="relative h-full w-full rounded-full bg-card/90 backdrop-blur border border-border flex flex-col items-center justify-center text-center px-6">
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary text-primary-foreground px-3 py-1 text-xs font-bold border border-primary/30 shadow-sm">
+                      04
+                    </div>
+                    <div className="w-14 h-14 rounded-full bg-primary/15 text-primary flex items-center justify-center mb-4">
+                      <BadgeCheck className="w-7 h-7" />
+                    </div>
+                    <h3 className="font-bold text-sm text-foreground">Issuance / Surrender</h3>
+                    <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+                      BEE issues CCCs if target is beaten; otherwise, credits must be purchased.
+                    </p>
+                  </div>
+                </div>
               </div>
+            </div>
+
+            <div className="mt-10 mx-auto max-w-2xl">
+              <div className="bg-card/80 backdrop-blur border border-border rounded-2xl px-6 py-4 text-center shadow-sm">
+                <p className="text-sm text-muted-foreground">
+                  A transparent cycle ensuring accountability, accuracy, and environmental integrity.
+                </p>
+              </div>
+            </div>
           </div>
 
           <div className="mt-20">
@@ -191,156 +441,56 @@ export function LandingPage() {
                   </div>
               </div>
           </div>
+          </div>
       </section>
 
-      {/* Projects Section */}
-      <section id="projects" className="w-full flex flex-col items-center border-t border-border bg-background">
-        {/* Project Hero */}
-        <div className="relative h-[60vh] min-h-[500px] w-full overflow-hidden">
-          <div className="absolute inset-0 z-0">
-            <img className="w-full h-full object-cover" alt="Boreal Forest" src="https://lh3.googleusercontent.com/aida/ADBb0ugGAlrbQJiPMrRxuea8zmpf-fecPpQ8pzEUmr6IKBZHcQgpyTrhXhzXFpv38VKRb0I1uWcV0ZJD79m1NxObaGEAFge070T9ob9hCPP3_acWmeXb5SE3iJ7-9nbPnqxKxgcLcns3HFhfw2xTbAAhZTQVWoUrYYvZiPQIJ_Kxs810te8hJSpEPoPzxt7q-vu-xdN4D53ep7Wqg1Uqu1qn_5BpnDUkRIxHNSwNVw9-zJJWok00NtzuW_bb812o3DYCfH6nD3x4Rz-JUQ" />
-            <div className="absolute inset-0 bg-gradient-to-b from-background/10 via-background/50 to-background"></div>
-          </div>
-          <div className="relative z-10 max-w-7xl mx-auto px-6 h-full flex flex-col justify-end pb-16 w-full">
-            <div className="inline-flex items-center gap-2 bg-secondary/80 backdrop-blur-md border border-border px-4 py-1.5 rounded-full mb-6 w-fit text-secondary-foreground">
-              <BadgeCheck className="w-4 h-4" />
-              <span className="text-xs font-bold uppercase tracking-widest">Registry Verified: VER-2024-089</span>
+      {/* About Us */}
+      <section id="about-us" className="w-full border-t border-border bg-background">
+        <div className="max-w-7xl mx-auto px-6 py-20">
+          <div className="text-center mb-14">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary text-secondary-foreground text-xs font-bold uppercase tracking-widest border border-border">
+              Meet the Team
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4 max-w-3xl">Boreal Forest Conservation & Biodiversity Corridor</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl">A high-integrity nature-based solution focused on the permanent protection of 145,000 hectares of primary carbon-rich peatlands in the Northern Hemisphere.</p>
+            <h2 className="mt-4 text-3xl md:text-4xl font-extrabold text-foreground">MEET THE TEAM</h2>
+            <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
+              The minds behind CarbonBridge—designing a clear, trustworthy experience for the Indian Carbon Market ecosystem.
+            </p>
           </div>
-        </div>
 
-        {/* Project Details Grid */}
-        <div className="max-w-7xl mx-auto px-6 py-20 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            {/* Left Column: Details & Methodology */}
-            <div className="lg:col-span-8 flex flex-col gap-8">
-              {/* Overview Card */}
-              <div className="bg-card/40 backdrop-blur-xl border border-border rounded-2xl p-8 shadow-sm">
-                <div className="flex items-center gap-3 mb-6">
-                  <FileText className="text-primary w-6 h-6" />
-                  <h2 className="text-2xl font-bold text-foreground">Project Narrative</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Dishti */}
+            <div className="bg-card border border-border rounded-3xl p-8 shadow-sm">
+              <div className="flex items-center gap-5">
+                <div className="h-20 w-20 rounded-full border-2 border-primary/30 bg-primary/10 flex items-center justify-center text-primary font-black text-2xl">
+                  D
                 </div>
-                <div className="space-y-4 text-muted-foreground leading-relaxed">
-                  <p>The Boreal Forest Conservation project serves as a critical carbon sink and biodiversity sanctuary. Situated across the subarctic landscape, this initiative prevents the degradation of ancient peatlands which store three times more carbon per hectare than tropical rainforests.</p>
-                  <p>By establishing a legally binding conservation easement, CarbonBridge ensures that this landscape remains untouched by industrial logging or mining operations for the next 100 years, securing a projected sequestration of 1.2M tonnes of CO2e annually.</p>
-                </div>
-              </div>
-              
-              {/* Methodology Bento */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-card/40 backdrop-blur-xl border border-border rounded-2xl p-6 shadow-sm border-l-4 border-l-secondary">
-                  <FlaskConical className="text-secondary w-6 h-6 mb-4" />
-                  <h3 className="font-bold text-foreground mb-2">Scientific Methodology</h3>
-                  <p className="text-sm text-muted-foreground">Utilizing Lidar-based biomass estimation coupled with ground-truthed soil organic carbon (SOC) sampling protocols established by the IPCC.</p>
-                </div>
-                <div className="bg-card/40 backdrop-blur-xl border border-border rounded-2xl p-6 shadow-sm border-l-4 border-l-primary">
-                  <Satellite className="text-primary w-6 h-6 mb-4" />
-                  <h3 className="font-bold text-foreground mb-2">Remote Monitoring</h3>
-                  <p className="text-sm text-muted-foreground">Bi-weekly satellite imagery analysis provides real-time alerts for any unauthorized canopy disturbance or landscape changes.</p>
-                </div>
-              </div>
-
-              {/* Map Integration Placeholder */}
-              <div className="bg-card/40 backdrop-blur-xl border border-border rounded-2xl h-[400px] relative overflow-hidden shadow-sm">
-                <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
-                  <div className="bg-background/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold text-foreground shadow-sm uppercase tracking-tighter">Live Geospatial Layer</div>
-                  <div className="bg-background/90 backdrop-blur p-2 rounded-lg flex flex-col gap-2 shadow-sm border border-border">
-                    <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-secondary"></div><span className="text-[10px] font-medium text-foreground">Verified Boundary</span></div>
-                    <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-primary"></div><span className="text-[10px] font-medium text-foreground">Core Sequestration Zone</span></div>
-                  </div>
-                </div>
-                <div className="w-full h-full bg-muted flex items-center justify-center relative">
-                  <img className="w-full h-full object-cover opacity-60" alt="Map" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJjxnBDZKyPlnyh7cw_r2UmZlHRPZavG9bwa1mQjVJOJfCD_mkdsezQLhFVrGbfWuIexn5xsJzCJmhzXf8xvkEAyjb6I6gF0UmlZZe8XUJ1_IkhsUiDA2itZxqZSLnX4NOiyEpseI60TOq4-MTI2GbDIb5Qv_xU65qnfVNInzESXEpgfcdLcE-dLbBorInEZBoRXO_gQhXUF8n7tpyFlnYbPZ9mvAe6BmLQBNLmfKSg7U55RvWLP1G9SOMBR8Cqrai2unLKu1N-1U" />
-                  <div className="absolute inset-0 flex items-center justify-center z-10">
-                    <div className="bg-background/60 backdrop-blur-xl p-4 rounded-full border border-border shadow-sm">
-                      <Map className="text-primary w-8 h-8" />
-                    </div>
-                  </div>
+                <div className="flex-1">
+                  <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                    The Mind Behind the Website
+                  </p>
+                  <h3 className="text-2xl font-extrabold text-foreground mt-1">Dishti</h3>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Product vision, information architecture, and overall experience design.
+                  </p>
                 </div>
               </div>
             </div>
 
-            {/* Right Column: Stats & Timeline */}
-            <div className="lg:col-span-4 flex flex-col gap-8">
-              {/* Performance Metrics Card */}
-              <div className="bg-primary text-primary-foreground rounded-2xl p-8 shadow-xl relative overflow-hidden">
-                <div className="absolute -right-12 -top-12 w-32 h-32 bg-secondary/20 rounded-full blur-3xl"></div>
-                <h3 className="text-sm font-bold mb-8 opacity-80 uppercase tracking-widest">Impact Metrics</h3>
-                <div className="space-y-8 relative z-10">
-                  <div>
-                    <div className="flex justify-between items-end mb-2">
-                      <span className="text-4xl font-black">1.2M</span>
-                      <span className="text-sm opacity-70 mb-1">tCO2e / yr</span>
-                    </div>
-                    <div className="w-full bg-primary-foreground/20 h-1.5 rounded-full overflow-hidden">
-                      <div className="bg-secondary h-full w-[85%]"></div>
-                    </div>
-                    <p className="text-[10px] mt-2 opacity-60">Annual Emission Reductions (Projected)</p>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <div className="text-2xl font-bold">145k</div>
-                      <p className="text-[10px] opacity-60 uppercase">Hectares Protected</p>
-                    </div>
-                    <div>
-                      <div className="text-2xl font-bold">A+</div>
-                      <p className="text-[10px] opacity-60 uppercase">Integrity Rating</p>
-                    </div>
-                  </div>
+            {/* Nand */}
+            <div className="bg-card border border-border rounded-3xl p-8 shadow-sm">
+              <div className="flex items-center gap-5">
+                <div className="h-20 w-20 rounded-full border-2 border-primary/30 bg-primary/10 flex items-center justify-center text-primary font-black text-2xl">
+                  N
                 </div>
-              </div>
-
-              {/* Verification Timeline */}
-              <div className="bg-card/40 backdrop-blur-xl border border-border rounded-2xl p-8 shadow-sm">
-                <h3 className="text-sm font-bold text-foreground mb-8 uppercase tracking-widest">Verification Journey</h3>
-                <div className="relative space-y-8 before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[2px] before:bg-border">
-                  {/* Step 1 */}
-                  <div className="relative pl-10">
-                    <div className="absolute left-0 top-1 w-6 h-6 rounded-full bg-secondary flex items-center justify-center z-10 border-[3px] border-card">
-                      <Check className="text-secondary-foreground w-3 h-3" />
-                    </div>
-                    <div className="font-bold text-primary text-xs mb-1">June 2023</div>
-                    <h4 className="font-bold text-sm text-foreground">Initial Feasibility Audit</h4>
-                    <p className="text-xs text-muted-foreground mt-1">Third-party baseline assessment completed by EcoCert International.</p>
-                  </div>
-                  {/* Step 2 */}
-                  <div className="relative pl-10">
-                    <div className="absolute left-0 top-1 w-6 h-6 rounded-full bg-secondary flex items-center justify-center z-10 border-[3px] border-card">
-                      <Check className="text-secondary-foreground w-3 h-3" />
-                    </div>
-                    <div className="font-bold text-primary text-xs mb-1">Oct 2023</div>
-                    <h4 className="font-bold text-sm text-foreground">Validation Statement</h4>
-                    <p className="text-xs text-muted-foreground mt-1">Methodology approval and formal registry listing finalized.</p>
-                  </div>
-                  {/* Step 3 */}
-                  <div className="relative pl-10">
-                    <div className="absolute left-0 top-1 w-6 h-6 rounded-full bg-primary flex items-center justify-center z-10 border-[3px] border-card">
-                      <RefreshCw className="text-primary-foreground w-3 h-3 animate-pulse" />
-                    </div>
-                    <div className="font-bold text-primary text-xs mb-1">Current Phase</div>
-                    <h4 className="font-bold text-sm text-foreground">Verification Round #1</h4>
-                    <p className="text-xs text-muted-foreground mt-1">Satellite data reconciliation in progress. Expected issuance in 14 days.</p>
-                  </div>
-                  {/* Step 4 */}
-                  <div className="relative pl-10 opacity-50">
-                    <div className="absolute left-0 top-1 w-6 h-6 rounded-full bg-muted flex items-center justify-center z-10 border-[3px] border-card">
-                      <Clock className="text-muted-foreground w-3 h-3" />
-                    </div>
-                    <div className="font-bold text-muted-foreground text-xs mb-1">Jan 2025</div>
-                    <h4 className="font-bold text-sm text-foreground">First Credit Issuance</h4>
-                    <p className="text-xs text-muted-foreground mt-1">Minting of inaugural vintage conservation credits.</p>
-                  </div>
+                <div className="flex-1">
+                  <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                    The Eyes Infront of Website
+                  </p>
+                  <h3 className="text-2xl font-extrabold text-foreground mt-1">Nand</h3>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Front-end execution, visual polish, and ensuring every screen feels effortless.
+                  </p>
                 </div>
-              </div>
-
-              {/* Action Card */}
-              <div className="bg-primary/5 rounded-2xl p-6 border border-primary/20 flex flex-col gap-4">
-                <p className="text-sm text-primary font-medium text-center italic">"Direct institutional funding for this project supports the protection of endemic caribou populations."</p>
-                <button className="w-full bg-secondary text-secondary-foreground py-3 rounded-xl font-bold text-sm hover:bg-secondary/90 transition-colors shadow-sm">
-                  Download Audit Documents
-                </button>
               </div>
             </div>
           </div>
@@ -359,6 +509,16 @@ export function LandingPage() {
         }
         .animate-marquee {
           animation: marquee 20s linear infinite;
+        }
+        @keyframes spin-slow {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+          animation: spin-slow 8s linear infinite;
+        }
+        .clip-path-left {
+          clip-path: inset(0 50% 0 0);
         }
       `}} />
     </div>

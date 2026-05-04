@@ -1,3 +1,4 @@
+import React from "react";
 import { Play, BookOpen, ChevronRight } from "lucide-react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { Course } from "./data";
@@ -11,6 +12,22 @@ interface CourseListProps {
 }
 
 export function CourseList({ role, activeTab, setActiveTab, courses, onSelectCourse }: CourseListProps) {
+  const farmerHeaderImages: Record<number, string> = {
+    1: new URL("../../../assets/images/Eh_f_c1.jpeg", import.meta.url).toString(),
+    2: new URL("../../../assets/images/Eh_f_c2.jpeg", import.meta.url).toString(),
+    3: new URL("../../../assets/images/Eh_f_c3.jpeg", import.meta.url).toString(),
+    4: new URL("../../../assets/images/Eh_f_c4.jpeg", import.meta.url).toString(),
+    5: new URL("../../../assets/images/Eh_f_c5.jpeg", import.meta.url).toString(),
+  };
+
+  const corporateHeaderImages: Record<number, string> = {
+    6: new URL("../../../assets/images/Eh_C_c1.jpeg", import.meta.url).toString(),
+    7: new URL("../../../assets/images/Eh_C_c2.jpeg", import.meta.url).toString(),
+    8: new URL("../../../assets/images/Eh_C_c3.jpeg", import.meta.url).toString(),
+    9: new URL("../../../assets/images/Eh_C_c4.jpeg", import.meta.url).toString(),
+    10: new URL("../../../assets/images/Eh_C_c5.jpeg", import.meta.url).toString(),
+  };
+
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 font-[Inter,DM_Sans,sans-serif]">
       {/* Featured Banner based on Role */}
@@ -86,60 +103,107 @@ export function CourseList({ role, activeTab, setActiveTab, courses, onSelectCou
               onSelectCourse(course);
             }}
             style={{ cursor: "pointer", pointerEvents: "auto" }}
-            className="bg-card rounded-2xl border border-border p-6 shadow-sm hover:shadow-md hover:border-primary/30 transition-all group flex flex-col h-full relative z-10"
+            className="bg-card rounded-2xl border border-border shadow-sm hover:shadow-md hover:border-primary/30 transition-all group flex flex-col h-full relative z-10 overflow-hidden"
           >
-            <div className="flex items-start justify-between mb-4 pointer-events-none">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-                <course.icon className="w-6 h-6 text-primary" />
+            {/* Course header images */}
+            {activeTab === "farmers" && farmerHeaderImages[course.id] && (
+              <div className="relative h-[150px] w-full pointer-events-none">
+                <img
+                  src={farmerHeaderImages[course.id]}
+                  alt=""
+                  aria-hidden="true"
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent" />
+
+                <div className="absolute left-3 top-3 flex items-center gap-2">
+                  <span className="px-2.5 py-1 bg-white/80 backdrop-blur rounded-full text-[11px] font-bold text-foreground border border-white/40 shadow-sm">
+                    {course.level}
+                  </span>
+                </div>
               </div>
-              <span className="px-2.5 py-1 bg-muted rounded-full text-xs font-medium text-muted-foreground">
-                {course.level}
-              </span>
-            </div>
-            
-            <h3 className="text-lg font-bold mb-2 group-hover:text-primary transition-colors pointer-events-none">{course.title}</h3>
-            <p className="text-sm text-muted-foreground mb-6 line-clamp-2 flex-1 pointer-events-none">
-              {course.description}
-            </p>
-            
-            <div className="flex items-center justify-between text-xs font-medium text-muted-foreground mb-4 pointer-events-none">
-              <span className="flex items-center gap-1.5 bg-muted/50 px-2.5 py-1 rounded-md">
-                <BookOpen className="w-3.5 h-3.5" /> {course.lessons} Chapters
-              </span>
-              <span className="bg-muted/50 px-2.5 py-1 rounded-md">{course.duration}</span>
-            </div>
-            
-            {/* Progress Bar */}
-            <div className="mb-4 pointer-events-none">
-              <div className="flex items-center justify-between text-xs mb-1.5 font-medium">
-                <span className="text-muted-foreground">Course Progress</span>
-                <span className={course.progress > 0 ? "text-primary" : "text-muted-foreground"}>{course.progress}%</span>
+            )}
+
+            {activeTab === "corporates" && corporateHeaderImages[course.id] && (
+              <div className="relative h-[150px] w-full pointer-events-none">
+                <img
+                  src={corporateHeaderImages[course.id]}
+                  alt=""
+                  aria-hidden="true"
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent" />
+
+                <div className="absolute left-3 top-3 flex items-center gap-2">
+                  <span className="px-2.5 py-1 bg-white/80 backdrop-blur rounded-full text-[11px] font-bold text-foreground border border-white/40 shadow-sm">
+                    {course.level}
+                  </span>
+                </div>
               </div>
-              <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
-                <div
-                  className="h-full rounded-full transition-all duration-1000 ease-out"
-                  style={{
-                    width: `${course.progress}%`,
-                    backgroundColor: course.progress === 100 ? "#2d6a4f" : "#52b788",
-                  }}
-                ></div>
+            )}
+
+            <div className="p-6 flex flex-col flex-1">
+              <div className="flex items-start justify-between mb-4 pointer-events-none">
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <course.icon className="w-6 h-6 text-primary" />
+                </div>
+                {/* level pill is on header image for farmers; keep here for corporates */}
+                {!(
+                  (activeTab === "farmers" && farmerHeaderImages[course.id]) ||
+                  (activeTab === "corporates" && corporateHeaderImages[course.id])
+                ) && (
+                  <span className="px-2.5 py-1 bg-muted rounded-full text-xs font-medium text-muted-foreground">
+                    {course.level}
+                  </span>
+                )}
               </div>
-            </div>
             
-            <button 
-              onClick={(e) => { 
-                e.stopPropagation();
-                console.log("Button clicked!", course.title);
-                onSelectCourse(course); 
-              }}
-              className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-bold transition-all transform hover:scale-105 active:scale-95 relative z-20 ${
-              course.progress > 0 && course.progress < 100 
-                ? "bg-primary text-primary-foreground shadow-md shadow-primary/20" 
-                : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-            }`}>
-              {course.progress === 0 ? "Start Course" : course.progress === 100 ? "Review Material" : "Continue Learning"}
-              <ChevronRight className="w-4 h-4" />
-            </button>
+              <h3 className="text-lg font-bold mb-2 group-hover:text-primary transition-colors pointer-events-none">{course.title}</h3>
+              <p className="text-sm text-muted-foreground mb-6 line-clamp-2 flex-1 pointer-events-none">
+                {course.description}
+              </p>
+            
+              <div className="flex items-center justify-between text-xs font-medium text-muted-foreground mb-4 pointer-events-none">
+                <span className="flex items-center gap-1.5 bg-muted/50 px-2.5 py-1 rounded-md">
+                  <BookOpen className="w-3.5 h-3.5" /> {course.lessons} Chapters
+                </span>
+                <span className="bg-muted/50 px-2.5 py-1 rounded-md">{course.duration}</span>
+              </div>
+            
+              {/* Progress Bar */}
+              <div className="mb-4 pointer-events-none">
+                <div className="flex items-center justify-between text-xs mb-1.5 font-medium">
+                  <span className="text-muted-foreground">Course Progress</span>
+                  <span className={course.progress > 0 ? "text-primary" : "text-muted-foreground"}>{course.progress}%</span>
+                </div>
+                <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+                  <div
+                    className="h-full rounded-full transition-all duration-1000 ease-out"
+                    style={{
+                      width: `${course.progress}%`,
+                      backgroundColor: course.progress === 100 ? "#2d6a4f" : "#52b788",
+                    }}
+                  ></div>
+                </div>
+              </div>
+            
+              <button 
+                onClick={(e) => { 
+                  e.stopPropagation();
+                  console.log("Button clicked!", course.title);
+                  onSelectCourse(course); 
+                }}
+                className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-bold transition-all transform hover:scale-105 active:scale-95 relative z-20 ${
+                course.progress > 0 && course.progress < 100 
+                  ? "bg-primary text-primary-foreground shadow-md shadow-primary/20" 
+                  : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+              }`}>
+                {course.progress === 0 ? "Start Course" : course.progress === 100 ? "Review Material" : "Continue Learning"}
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         ))}
       </div>
