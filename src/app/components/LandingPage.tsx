@@ -258,38 +258,134 @@ export function LandingPage() {
         </div>
       </section>
 
-      {/* Process happens & the calculation */}
-      <section id="calculator" className="py-20 px-6 bg-secondary/30 border-y border-border w-full">
-          <div className="max-w-7xl mx-auto">
-              <div className="text-center mb-16">
-                  <h2 className="text-3xl font-bold mb-4">Carbon Sequestration Calculation</h2>
-                  <p className="text-muted-foreground max-w-2xl mx-auto">Robust, scientifically validated calculation engines for both industrial and nature-based credits to generate "High-Integrity" credits.</p>
+      {/* Process happens & the calculation — Roadmap visual matching supplied image */}
+      <section id="calculator" className="py-20 px-6 bg-[#fbfff9] w-full">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-3">How Carbon Credits Are Calculated</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">From tree growth to carbon credits — a simple, science-backed process.</p>
+          </div>
+
+          <div className="relative mt-12 pt-10 pb-16">
+            <div className="relative max-w-6xl mx-auto">
+              {/* Central vertical track */}
+              <div className="absolute left-1/2 top-0 -translate-x-1/2 h-full w-2 md:w-3 bg-gradient-to-b from-emerald-400 to-emerald-200 rounded-full shadow-inner" aria-hidden />
+
+              {/* Zig-zag steps - responsive: stacked on small screens, alternating on md+ */}
+              <div className="flex flex-col gap-12 mt-6">
+                {/* Step 1 - left */}
+                <div className="flex w-full items-center md:justify-start justify-center">
+                  <div className="flex items-center gap-6 max-w-lg md:pl-6">
+                    <div className="flex-shrink-0 z-20">
+                      <div className="w-14 h-14 rounded-full bg-white border-4 border-emerald-500 text-emerald-700 flex items-center justify-center font-bold">1</div>
+                    </div>
+                    <div className="bg-white/95 p-5 rounded-2xl shadow-md">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-md bg-emerald-50 flex items-center justify-center text-emerald-700"><TreePine className="w-4 h-4"/></div>
+                        <h4 className="font-bold">Measure Tree Growth</h4>
+                      </div>
+                      <p className="text-sm text-muted-foreground mt-2">Measure tree size (DBH, height).</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Step 2 - right */}
+                <div className="flex w-full items-center md:justify-end justify-center">
+                  <div className="flex items-center gap-6 max-w-lg md:pr-6">
+                    <div className="bg-white/95 p-5 rounded-2xl shadow-md text-right">
+                      <div className="flex items-center justify-end gap-3">
+                        <h4 className="font-bold">Estimate Biomass</h4>
+                        <div className="w-10 h-10 rounded-md bg-emerald-50 flex items-center justify-center text-emerald-700"><Trees className="w-4 h-4"/></div>
+                      </div>
+                      <p className="text-sm text-muted-foreground mt-2">Calculate the total organic mass.</p>
+                    </div>
+                    <div className="flex-shrink-0 z-20">
+                      <div className="w-14 h-14 rounded-full bg-white border-4 border-emerald-500 text-emerald-700 flex items-center justify-center font-bold">2</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Step 3 - left */}
+                <div className="flex w-full items-center md:justify-start justify-center">
+                  <div className="flex items-center gap-6 max-w-lg md:pl-6">
+                    <div className="flex-shrink-0 z-20">
+                      <div className="w-14 h-14 rounded-full bg-white border-4 border-emerald-500 text-emerald-700 flex items-center justify-center font-bold">3</div>
+                    </div>
+                    <div className="bg-white/95 p-5 rounded-2xl shadow-md">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-md bg-emerald-50 flex items-center justify-center text-emerald-700"><FileText className="w-4 h-4"/></div>
+                        <h4 className="font-bold">Dry Weight</h4>
+                      </div>
+                      <p className="text-sm text-muted-foreground mt-2">Remove moisture to get dry biomass.</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Step 4 - right */}
+                <div className="flex w-full items-center md:justify-end justify-center">
+                  <div className="flex items-center gap-6 max-w-lg md:pr-6">
+                    <div className="bg-white/95 p-5 rounded-2xl shadow-md text-right">
+                      <div className="flex items-center justify-end gap-3">
+                        <h4 className="font-bold">Calculate Carbon</h4>
+                        <div className="w-10 h-10 rounded-md bg-emerald-50 flex items-center justify-center text-emerald-700"><Leaf className="w-4 h-4"/></div>
+                      </div>
+                      <p className="text-sm text-muted-foreground mt-2">About 50% of the dry biomass is carbon.</p>
+                    </div>
+                    <div className="flex-shrink-0 z-20">
+                      <div className="w-14 h-14 rounded-full bg-white border-4 border-emerald-500 text-emerald-700 flex items-center justify-center font-bold">4</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Step 5 - left */}
+                <div className="flex w-full items-center md:justify-start justify-center">
+                  <div className="flex items-center gap-6 max-w-lg md:pl-6">
+                    <div className="flex-shrink-0 z-20">
+                      <div className="w-14 h-14 rounded-full bg-white border-4 border-emerald-500 text-emerald-700 flex items-center justify-center font-bold">5</div>
+                    </div>
+                    <div className="bg-white/95 p-5 rounded-2xl shadow-md">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-md bg-emerald-50 flex items-center justify-center text-emerald-700"><Globe className="w-4 h-4"/></div>
+                        <h4 className="font-bold">Convert to CO₂e</h4>
+                      </div>
+                      <p className="text-sm text-muted-foreground mt-2">Convert stored carbon to CO₂ equivalent.</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Step 6 - right */}
+                <div className="flex w-full items-center md:justify-end justify-center">
+                  <div className="flex items-center gap-6 max-w-lg md:pr-6">
+                    <div className="bg-white/95 p-5 rounded-2xl shadow-md text-right">
+                      <div className="flex items-center justify-end gap-3">
+                        <h4 className="font-bold">Generate Credits</h4>
+                        <div className="w-10 h-10 rounded-md bg-emerald-50 flex items-center justify-center text-emerald-700"><BadgeCheck className="w-4 h-4"/></div>
+                      </div>
+                      <p className="text-sm text-muted-foreground mt-2">1 Carbon Credit = 1 ton of CO₂ removed.</p>
+                    </div>
+                    <div className="flex-shrink-0 z-20">
+                      <div className="w-14 h-14 rounded-full bg-white border-4 border-emerald-500 text-emerald-700 flex items-center justify-center font-bold">6</div>
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              <div className="grid md:grid-cols-3 gap-8">
-                  <div className="bg-card p-6 rounded-2xl border border-border shadow-sm">
-                      <div className="w-10 h-10 bg-primary/20 text-primary rounded-lg flex items-center justify-center mb-4">
-                          <TreePine className="w-5 h-5" />
-                      </div>
-                      <h3 className="font-bold mb-2">1. Biomass Estimation</h3>
-                      <p className="text-sm text-muted-foreground mb-4">Utilizing allometric equations based on Diameter at Breast Height (DBH) and Total Height (H) to compute Above-Ground Biomass.</p>
+              {/* Bottom mini legend */}
+              <div className="mt-10 pt-6 mb-24">
+                <div className="mx-auto max-w-3xl relative z-40 bg-white border border-emerald-50 rounded-3xl px-6 py-6 shadow-sm flex items-center justify-between gap-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-emerald-700 text-white flex items-center justify-center"><Leaf className="w-5 h-5"/></div>
+                    <div>
+                      <div className="text-sm font-bold text-foreground">Tree Growth</div>
+                      <div className="text-xs text-muted-foreground">→ Biomass → Dry Weight → Carbon → CO₂e → Credits</div>
+                    </div>
                   </div>
-                  <div className="bg-card p-6 rounded-2xl border border-border shadow-sm">
-                      <div className="w-10 h-10 bg-primary/20 text-primary rounded-lg flex items-center justify-center mb-4">
-                          <Calculator className="w-5 h-5" />
-                      </div>
-                      <h3 className="font-bold mb-2">2. Dry Weight & Content</h3>
-                      <p className="text-sm text-muted-foreground mb-4">Accounting for the root system (Total Biomass), multiplying by 0.725 to remove moisture, standardizing Carbon Content at 50% of the dry weight.</p>
-                  </div>
-                  <div className="bg-card p-6 rounded-2xl border border-border shadow-sm">
-                      <div className="w-10 h-10 bg-primary/20 text-primary rounded-lg flex items-center justify-center mb-4">
-                          <DollarSign className="w-5 h-5" />
-                      </div>
-                      <h3 className="font-bold mb-2">3. CO₂e Conversion</h3>
-                      <p className="text-sm text-muted-foreground mb-4">Multiplying the carbon weight by the ratio of molecular weights (44/12) to calculate the final amount of CO₂ sequestered.</p>
-                  </div>
+                  <div className="text-xs text-muted-foreground">From measurement to tradable credits — science-backed.</div>
+                </div>
               </div>
+            </div>
           </div>
+        </div>
       </section>
 
       {/* Compliance Cycle & Roles */}
