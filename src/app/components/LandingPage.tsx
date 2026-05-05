@@ -11,6 +11,14 @@ export function LandingPage() {
     "../../assets/images/Landing_Page_CMC-bg.png",
     import.meta.url,
   ).toString();
+  const dishtiImg = new URL(
+    "../../assets/images/Landing_Dishti.jpeg",
+    import.meta.url,
+  ).toString();
+  const nandImg = new URL(
+    "../../assets/images/Landing_Nand.jpeg",
+    import.meta.url,
+  ).toString();
 
   return (
     <div className="min-h-screen bg-background font-[Inter,DM_Sans,sans-serif] text-foreground scroll-smooth flex flex-col">
@@ -556,10 +564,8 @@ export function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Dishti */}
             <div className="bg-card border border-border rounded-3xl p-8 shadow-sm">
-              <div className="flex items-center gap-5">
-                <div className="h-20 w-20 rounded-full border-2 border-primary/30 bg-primary/10 flex items-center justify-center text-primary font-black text-2xl">
-                  D
-                </div>
+                <div className="flex items-center gap-5">
+                <img src={dishtiImg} alt="Dishti" className="h-20 w-20 rounded-full border-2 border-primary/30 object-cover" />
                 <div className="flex-1">
                   <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
                     The Mind Behind the Website
@@ -574,10 +580,8 @@ export function LandingPage() {
 
             {/* Nand */}
             <div className="bg-card border border-border rounded-3xl p-8 shadow-sm">
-              <div className="flex items-center gap-5">
-                <div className="h-20 w-20 rounded-full border-2 border-primary/30 bg-primary/10 flex items-center justify-center text-primary font-black text-2xl">
-                  N
-                </div>
+                <div className="flex items-center gap-5">
+                <img src={nandImg} alt="Nand" className="h-20 w-20 rounded-full border-2 border-primary/30 object-cover" />
                 <div className="flex-1">
                   <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
                     The Eyes Infront of Website
